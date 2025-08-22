@@ -3,7 +3,7 @@
 ## 👥 Team Members
 - Galal Magdy (Team Leader)  
 - Ahmed Ashour  
-- Ahmed Socrat  
+- Ahmed Sokrat  
 - Seif Emad  
 - Faisal Mahmoud  
 

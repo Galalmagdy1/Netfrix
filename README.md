@@ -1,18 +1,24 @@
-🎬 Project Name
-- Netfrix
+# 🎬 Project Name
+**Netfrix**
+
+---
 
 ## 👥 Team Members 
-- Galal Magdy (Team Leader)  
-- Ahmed Ashour  
-- Ahmed Sokrat  
-- Seif Emad  
-- Faisal Mahmoud  
+- **Galal Magdy** (Team Leader)  
+- **Ahmed Ashour**  
+- **Ahmed Sokrat**  
+- **Seif Emad**  
+- **Faisal Mahmoud**  
 
-## 💡 Project Idea :
+---
+
+## 💡 Project Idea
 An Android mobile application for streaming and browsing movies, similar to Netflix.  
 The app will allow users to explore, search, and watch movies with a simple and user-friendly interface.
 
- Project Plan :
+---
+
+## 🗓 Project Plan
 
 ### **Week 1: Design & Setup**
 - Define the app idea and core **MVP features**.  
@@ -48,21 +54,20 @@ The app will allow users to explore, search, and watch movies with a simple and 
 - Fix bugs and polish features.  
 - Optimize performance (caching, network handling).  
 - Set up **App Icon & Splash Screen**.  
-- Test on multiple devices/emulators.
+- Test on multiple devices/emulators.  
 
-# 📌 Team Responsibilities
+---
+
+## 📌 Team Responsibilities
 
 ### **Week 1: Design & Setup**
 👨‍🎨 **Ahmed Ashour & Galal Magdy** → UI/UX Design, Jetpack Compose Screens  
----
+
 ### **Week 2: API & Data Layer**
 🗄️ **Faisal Mahmoud & Saif Emad** → Database Models, API Integration, Repository Layer  
----
+
 ### **Week 3: Integration & Improvements**
 ⚙️ **Ahmed Sokrat** → Integration, State Management, Testing  
----
+
 ### **Week 4: Final Touches & Release**
-✨ **Ahmed Sokrat** → Final Bug Fixes, Polishing, Splash Screen, Multi-device Testing 
-
- 
-
+✨ **Ahmed Sokrat** → Final Bug Fixes, Polishing, Splash Screen, Multi-device Testing  

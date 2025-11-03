@@ -1,4 +1,6 @@
 package com.example.netfrix.ui.screens
+
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -21,19 +24,43 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.netfrix.viewmodel.AuthViewModel
+import com.example.netfrix.viewmodel.AuthState
 
 @Composable
 fun LoginScreen(
     onNavigateToSignUp: () -> Unit,
-    onNavigateToForgotPassword: () -> Unit
+    onNavigateToForgotPassword: () -> Unit,
+    onNavigateToHome: () -> Unit
 ) {
-
     val DarkBlue = Color(0xFF0D0C1D)
     val PurpleBlue = Color(0xFFB74F7B)
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
+
+    val viewModel: AuthViewModel = viewModel()
+    val authState by viewModel.authState.collectAsState()
+    val context = LocalContext.current
+
+
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Error -> {
+
+                Toast.makeText(context, (authState as AuthState.Error).message, Toast.LENGTH_LONG).show()
+                viewModel.clearState()
+            }
+            is AuthState.Success -> {
+                Toast.makeText(context, (authState as AuthState.Success).message, Toast.LENGTH_SHORT).show()
+                onNavigateToHome()
+                viewModel.clearState()
+            }
+            else -> {}
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -48,11 +75,10 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 180.dp, start = 24.dp, end = 24.dp),
+                .padding(top = 150.dp, start = 24.dp, end = 24.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Text(
                 text = "Welcome Back 👋",
                 color = Color.White,
@@ -79,7 +105,8 @@ fun LoginScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp),
+                enabled = authState != AuthState.Loading
             )
 
             OutlinedTextField(
@@ -110,7 +137,8 @@ fun LoginScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp),
+                enabled = authState != AuthState.Loading
             )
 
             Text(
@@ -120,21 +148,31 @@ fun LoginScreen(
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier
                     .align(Alignment.End)
-                    .clickable {  onNavigateToForgotPassword() }
+                    .clickable { onNavigateToForgotPassword() }
                     .padding(top = 4.dp, end = 4.dp)
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
-                onClick = { /* TODO: Login Logic */ },
+                onClick = {
+                    viewModel.login(email, password)
+                },
                 shape = RoundedCornerShape(30.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
+                    .height(50.dp),
+                enabled = authState != AuthState.Loading
             ) {
-                Text("Login", color = Color.White, fontSize = 18.sp)
+                if (authState is AuthState.Loading) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                } else {
+                    Text("Login", color = Color.White, fontSize = 18.sp)
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))

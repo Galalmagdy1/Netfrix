@@ -1,34 +1,35 @@
 package com.example.netfrix.ui.screens
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.netfrix.viewmodel.AuthViewModel
+import com.example.netfrix.viewmodel.AuthState
 
 @Composable
 fun ForgotPasswordScreen(
-    onNavigateToLogin: () -> Unit
+    onNavigateToLogin: () -> Unit,
+    viewModel: AuthViewModel = viewModel()
 ) {
     val darkBlue = Color(0xFF0D0C1D)
     val purpleBlue = Color(0xFFB74F7B)
 
     var email by remember { mutableStateOf("") }
-    var showMessage by remember { mutableStateOf<String?>(null) }
+    val authState by viewModel.authState.collectAsState()
 
     Box(
         modifier = Modifier
@@ -78,11 +79,7 @@ fun ForgotPasswordScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
-                onClick = {
-                    // TODO: هنا هننفذ منطق إرسال رابط إعادة التعيين (Firebase مثلاً)
-                    // حالياً نظهر رسالة بسيطة داخل الشاشة
-                    showMessage = if (email.isBlank()) "Please enter your email" else "Reset link sent to $email (demo)"
-                },
+                onClick = { viewModel.resetPassword(email) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -94,14 +91,30 @@ fun ForgotPasswordScreen(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // رسالة بسيطة للـ demo
-            showMessage?.let { msg ->
-                Text(
-                    text = msg,
-                    color = Color.White.copy(alpha = 0.9f),
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
+            // حالة التحميل أو النتيجة
+            when (val state = authState) {
+                is AuthState.Loading -> {
+                    Text(
+                        text = "Sending reset link...",
+                        color = Color.White.copy(alpha = 0.8f),
+                        fontSize = 14.sp
+                    )
+                }
+                is AuthState.Success -> {
+                    Text(
+                        text = state.message,
+                        color = Color(0xFF4CAF50),
+                        fontSize = 14.sp
+                    )
+                }
+                is AuthState.Error -> {
+                    Text(
+                        text = state.message,
+                        color = Color.Red,
+                        fontSize = 14.sp
+                    )
+                }
+                else -> {}
             }
 
             Spacer(modifier = Modifier.height(18.dp))
@@ -120,8 +133,7 @@ fun ForgotPasswordScreen(
                     color = Color(0xFF2196F3),
                     fontSize = 14.sp,
                     textDecoration = TextDecoration.Underline,
-                    modifier = Modifier
-                        .clickable {  onNavigateToLogin() }
+                    modifier = Modifier.clickable { onNavigateToLogin() }
                 )
             }
         }

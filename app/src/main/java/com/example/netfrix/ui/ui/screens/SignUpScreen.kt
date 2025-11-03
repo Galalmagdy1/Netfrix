@@ -1,4 +1,6 @@
 package com.example.netfrix.ui.screens
+
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -21,21 +24,46 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.netfrix.viewmodel.AuthState
+import com.example.netfrix.viewmodel.AuthViewModel
 
 @Composable
 fun SignUpScreen(
-    onNavigateToLogin: () -> Unit
+    onNavigateToLogin: () -> Unit,
+    onNavigateToLoginAfterSuccess: () -> Unit
 ) {
-
     val DarkBlue = Color(0xFF0D0C1D)
     val PurpleBlue = Color(0xFFB74F7B)
 
+    // ViewModel + State
+    val viewModel: AuthViewModel = viewModel()
+    val authState by viewModel.authState.collectAsState()
+    val context = LocalContext.current
+
     // Variables
-    var username by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isConfirmPasswordVisible by remember { mutableStateOf(false) }
+
+
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Success -> {
+
+                Toast.makeText(context, (authState as AuthState.Success).message, Toast.LENGTH_LONG).show()
+                onNavigateToLoginAfterSuccess()
+                viewModel.clearState()
+            }
+            is AuthState.Error -> {
+                Toast.makeText(context, (authState as AuthState.Error).message, Toast.LENGTH_SHORT).show()
+                viewModel.clearState()
+            }
+            else -> {}
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -64,9 +92,9 @@ fun SignUpScreen(
             )
 
             OutlinedTextField(
-                value = username,
-                onValueChange = { username = it },
-                label = { Text("Username", color = Color.White.copy(alpha = 0.8f)) },
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email", color = Color.White.copy(alpha = 0.8f)) },
                 textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
                 shape = RoundedCornerShape(30.dp),
                 colors = TextFieldDefaults.colors(
@@ -78,9 +106,11 @@ fun SignUpScreen(
                     unfocusedTextColor = Color.White,
                     cursorColor = Color.White
                 ),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp),
+                enabled = authState != AuthState.Loading
             )
 
             OutlinedTextField(
@@ -111,7 +141,8 @@ fun SignUpScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp),
+                enabled = authState != AuthState.Loading
             )
 
             OutlinedTextField(
@@ -142,20 +173,31 @@ fun SignUpScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp),
+                enabled = authState != AuthState.Loading
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
-                onClick = { /* TODO: Sign Up Logic */ },
+                onClick = {
+                    viewModel.signUp(email, password, confirmPassword)
+                },
                 shape = RoundedCornerShape(30.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
+                    .height(50.dp),
+                enabled = authState != AuthState.Loading
             ) {
-                Text("Sign Up", color = Color.White, fontSize = 18.sp)
+                if (authState is AuthState.Loading) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                } else {
+                    Text("Sign Up", color = Color.White, fontSize = 18.sp)
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))

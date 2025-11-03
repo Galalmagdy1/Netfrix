@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "363312609243",
+    "project_id": "netfrix-f7d01",
+    "storage_bucket": "netfrix-f7d01.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363312609243:android:4977699d4736eec8bdd9fe",
+        "android_client_info": {
+          "package_name": "com.example.netfrix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAU7VZePg7QmwEXSD7jYDpF7G9BgZQaFk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -11,6 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.netfrix.navigation.NewGraph
+import com.example.netfrix.ui.screens.ForgotPasswordScreen
+import com.example.netfrix.ui.screens.LoginScreen
+import com.example.netfrix.ui.screens.SignUpScreen
 import com.example.netfrix.ui.theme.NetfrixTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,28 +24,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             NetfrixTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    NewGraph()
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    NetfrixTheme {
-        Greeting("Android")
     }
 }

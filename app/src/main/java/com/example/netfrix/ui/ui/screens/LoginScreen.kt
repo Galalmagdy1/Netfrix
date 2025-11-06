@@ -1,4 +1,4 @@
-package com.example.netfrix.ui.screens
+package com.example.netfrix.ui.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.background

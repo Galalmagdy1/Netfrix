@@ -57,7 +57,7 @@ fun SearchScreen(
                 }
             } else if (errorMessage != null) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = errorMessage ?: "An unknown error occurred", color = Color.White)
+                    Text(text = "Check Your Internet!", color = Color.White)
                 }
             } else if (searchQuery.isNotBlank() && searchResults.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

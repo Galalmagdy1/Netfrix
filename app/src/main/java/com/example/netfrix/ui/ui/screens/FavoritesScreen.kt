@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -49,16 +51,24 @@ fun FavoritesScreen(navController: NavController, viewModel: MoviesViewModel = h
     val favoriteMovies by viewModel.favoriteMovies.collectAsState()
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             TopAppBar(
-                title = { Text("Favorites") },
+                windowInsets = WindowInsets(top = 0.dp),
+                title = { Text("Favorites", color = Color.White) },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
             )
         }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             if (favoriteMovies.isEmpty()) {
-                Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
-                    Text(text = "You haven't added any favorites yet.")
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "You haven't added any favorites yet.", color = Color.White)
                 }
             } else {
                 LazyColumn {
@@ -81,7 +91,7 @@ fun FavoriteMovieItem(movie: Movie, onItemClick: (Int) -> Unit) {
             .fillMaxWidth()
             .clickable { onItemClick(movie.id) },
         shape = RoundedCornerShape(corner = CornerSize(12.dp)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.1f))
     ) {
         Row(
             modifier = Modifier.padding(8.dp),
@@ -100,7 +110,7 @@ fun FavoriteMovieItem(movie: Movie, onItemClick: (Int) -> Unit) {
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = movie.title ?: "N/A", style = MaterialTheme.typography.titleLarge)
+                Text(text = movie.title ?: "N/A", style = MaterialTheme.typography.titleLarge, color = Color.White)
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -110,7 +120,7 @@ fun FavoriteMovieItem(movie: Movie, onItemClick: (Int) -> Unit) {
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("Favorite", style = MaterialTheme.typography.bodySmall)
+                    Text("Favorite", style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.8f))
                 }
             }
         }

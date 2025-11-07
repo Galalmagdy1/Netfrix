@@ -66,6 +66,7 @@ fun MovieDetailScreen(
     val movieDetails by viewModel.movieDetails.collectAsState()
     val favorites by viewModel.favoriteMovies.collectAsState(initial = emptyList())
     val isFavorite = favorites.any { it.id == movieId }
+    val DarkBlue = Color(0xFF0D0C1D)
 
     Scaffold(
         topBar = {
@@ -90,7 +91,7 @@ fun MovieDetailScreen(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
             )
         },
-        containerColor = Color.Black // Set base background to black
+        containerColor = DarkBlue // Set base background to DarkBlue
     ) { paddingValues ->
         Box(
             modifier = Modifier.fillMaxSize()
@@ -110,7 +111,7 @@ fun MovieDetailScreen(
                         .blur(radius = 16.dp)
                 )
 
-                // Fade-to-black gradient overlay
+                // Fade-to-DarkBlue gradient overlay
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -118,7 +119,7 @@ fun MovieDetailScreen(
                             brush = Brush.verticalGradient(
                                 colorStops = arrayOf(
                                     0.4f to Color.Transparent, // Top part is clear
-                                    0.65f to Color.Black      // Fade to black, then solid black below
+                                    0.65f to DarkBlue      // Fade to DarkBlue, then solid DarkBlue below
                                 )
                             )
                         )
@@ -143,7 +144,7 @@ fun MovieDetailScreen(
                             AsyncImage(
                                 model = "https://image.tmdb.org/t/p/w500${movieDetails?.posterPath}",
                                 contentDescription = "Movie Poster",
-                                contentScale = ContentScale.FillHeight
+                                contentScale = ContentScale.Crop
                             )
                         }
                     }

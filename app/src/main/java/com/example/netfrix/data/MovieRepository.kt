@@ -14,6 +14,8 @@ class MovieRepository @Inject constructor(
 
     suspend fun getMovieDetails(id: Int) = movieService.getMovieDetails(id)
 
+    suspend fun searchMovies(query: String) = movieService.searchMovies(query)
+
     fun getFavoriteMovies(): Flow<List<Movie>> = movieDao.getFavoriteMovies()
 
     suspend fun updateMovie(movie: Movie) = movieDao.updateMovie(movie)

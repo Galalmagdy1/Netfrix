@@ -9,15 +9,19 @@ import com.example.netfrix.data.MovieResult
 import com.example.netfrix.models.Movie
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class MoviesViewModel @Inject constructor(
     private val repository: MovieRepository,
@@ -49,9 +53,59 @@ class MoviesViewModel @Inject constructor(
     private val _movieDetails = MutableStateFlow<MovieDetails?>(null)
     val movieDetails: StateFlow<MovieDetails?> = _movieDetails
 
+    // --- Search State ---
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery = _searchQuery.asStateFlow()
+
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching = _isSearching.asStateFlow()
+
+    private val _searchResults = MutableStateFlow<List<MovieResult>>(emptyList())
+    val searchResults: StateFlow<List<Movie>> = _searchResults.combine(favoriteMovies) { searchResults, favMovies ->
+        val favIds = favMovies.map { it.id }.toSet()
+        searchResults.map { movieResult ->
+            Movie(movieResult).copy(isFavorite = favIds.contains(movieResult.id))
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    // --- End Search State ---
+
+
     init {
         fetchMovies()
+
+        // Debounce search query
+        viewModelScope.launch {
+            _searchQuery
+                .debounce(500) // 500ms debounce
+                .collect { query ->
+                    if (query.isNotBlank()) {
+                        executeSearch(query)
+                    } else {
+                        _searchResults.value = emptyList() // Clear results if query is empty
+                    }
+                }
+        }
     }
+
+    fun onSearchQueryChanged(query: String) {
+        _searchQuery.value = query
+    }
+
+    private fun executeSearch(query: String) {
+        viewModelScope.launch {
+            _isSearching.value = true
+            _errorMessage.value = null
+            try {
+                val response = repository.searchMovies(query)
+                _searchResults.value = response.results
+            } catch (e: Exception) {
+                _errorMessage.value = "Failed to fetch search results: ${e.message}"
+            } finally {
+                _isSearching.value = false
+            }
+        }
+    }
+
 
     fun fetchMovies(isRefresh: Boolean = false) {
         viewModelScope.launch {
@@ -93,7 +147,7 @@ class MoviesViewModel @Inject constructor(
             }
         }
     }
-    
+
     fun toggleFavorite(movieDetails: MovieDetails) {
         viewModelScope.launch {
             val localMovie = repository.getMovieById(movieDetails.id)

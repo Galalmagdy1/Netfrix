@@ -102,7 +102,7 @@ fun MainScreen(mainNavController: NavHostController) {
             ) {
                 composable(Screen.Home.route) { MoviesScreen(navController = mainNavController) }
                 composable(Screen.Favorites.route) { FavoritesScreen(navController = mainNavController) }
-                composable(Screen.Search.route) { SearchScreen() }
+                composable(Screen.Search.route) { SearchScreen(navController = mainNavController) }
                 composable(Screen.Settings.route) { SettingsScreen() }
             }
         }

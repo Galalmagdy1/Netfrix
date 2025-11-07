@@ -63,7 +63,7 @@ fun MoviesScreen(
                         onDismissRequest = { showMenu = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Signout") },
+                            text = { Text("Logout") },
                             onClick = {
                                 authViewModel.signout()
                                 navController.navigate("login") {
@@ -83,7 +83,7 @@ fun MoviesScreen(
             ) {
                 if (errorMessage != null) {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = errorMessage ?: "An error occurred.")
+                        Text(text = "Check Your Internet!")
                     }
                 } else {
                     LazyVerticalGrid(

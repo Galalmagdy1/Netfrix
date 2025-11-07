@@ -138,7 +138,7 @@ fun MovieDetailScreen(
                         Card(
                             shape = RoundedCornerShape(16.dp),
                             elevation = CardDefaults.cardElevation(8.dp),
-                            modifier = Modifier.height(300.dp)
+                            modifier = Modifier.height(280.dp)
                         ) {
                             AsyncImage(
                                 model = "https://image.tmdb.org/t/p/w500${movieDetails?.posterPath}",

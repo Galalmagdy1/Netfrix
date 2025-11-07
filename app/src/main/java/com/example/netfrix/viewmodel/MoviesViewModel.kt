@@ -7,6 +7,7 @@ import com.example.netfrix.data.MovieDetails
 import com.example.netfrix.data.MovieRepository
 import com.example.netfrix.data.MovieResult
 import com.example.netfrix.models.Movie
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +19,10 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
-class MoviesViewModel @Inject constructor(private val repository: MovieRepository) : ViewModel() {
+class MoviesViewModel @Inject constructor(
+    private val repository: MovieRepository,
+    private val firebaseAuth: FirebaseAuth
+) : ViewModel() {
 
     // Private flow for movies from the API
     private val _apiMovies = MutableStateFlow<List<MovieResult>>(emptyList())
@@ -109,5 +113,9 @@ class MoviesViewModel @Inject constructor(private val repository: MovieRepositor
                 repository.insertMovie(newMovie)
             }
         }
+    }
+
+    fun logout() {
+        firebaseAuth.signOut()
     }
 }

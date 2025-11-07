@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.netfrix.BuildConfig
 import com.example.netfrix.data.MovieDatabase
 import com.example.netfrix.data.remote.MovieService
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -63,4 +64,8 @@ object AppModule {
             .build()
             .create(MovieService::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 }

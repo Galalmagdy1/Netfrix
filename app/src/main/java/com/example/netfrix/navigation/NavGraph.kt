@@ -6,10 +6,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.netfrix.ui.ui.screens.FavoritesScreen
 import com.example.netfrix.ui.ui.screens.ForgotPasswordScreen
-import com.example.netfrix.ui.ui.screens.HomeScreen
 import com.example.netfrix.ui.ui.screens.LoginScreen
+import com.example.netfrix.ui.ui.screens.MainScreen
 import com.example.netfrix.ui.ui.screens.SignUpScreen
 import com.example.netfrix.ui.ui.screens.SplashScreen
 import com.example.netfrix.ui.ui.screens.details.DetailsScreen
@@ -26,7 +25,7 @@ fun NewGraph() {
         composable("splash") {
             SplashScreen(
                 onNavigateToHome = {
-                    navController.navigate("home") {
+                    navController.navigate("main") {
                         popUpTo("splash") { inclusive = true }
                     }
                 },
@@ -43,7 +42,7 @@ fun NewGraph() {
                 onNavigateToSignUp = { navController.navigate("signup") },
                 onNavigateToForgotPassword = { navController.navigate("forgot") },
                 onNavigateToHome = {
-                    navController.navigate("home") {
+                    navController.navigate("main") {
                         popUpTo("login") { 
                             inclusive = true
                         }
@@ -74,8 +73,8 @@ fun NewGraph() {
             )
         }
 
-        composable("home") {
-            HomeScreen(navController = navController)
+        composable("main") {
+            MainScreen(mainNavController = navController)
         }
 
         composable(
@@ -86,10 +85,6 @@ fun NewGraph() {
                 navController = navController,
                 movieId = backStackEntry.arguments?.getInt("movieId")
             )
-        }
-
-        composable("favorites") {
-            FavoritesScreen(navController = navController)
         }
     }
 }

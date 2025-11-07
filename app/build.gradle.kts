@@ -5,6 +5,7 @@ plugins {
     id("com.google.gms.google-services")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -19,6 +20,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "TMDB_API_KEY", "\"2f4a4524260361d162a60d37073cdbfd\"")
     }
 
     buildTypes {
@@ -39,6 +41,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     kapt {
         correctErrorTypes = true
@@ -81,6 +84,7 @@ dependencies {
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     //Room
     implementation("androidx.room:room-runtime:2.6.1")
@@ -89,4 +93,7 @@ dependencies {
 
     //ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
+    
+    // SwipeRefresh
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.24.13-rc")
 }

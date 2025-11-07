@@ -13,6 +13,9 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(movies: List<Movie>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(movie: Movie)
+
     @Query("SELECT * FROM movies")
     fun getAllMovies(): Flow<List<Movie>>
 

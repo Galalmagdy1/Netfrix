@@ -20,6 +20,10 @@ class AuthViewModel : ViewModel() {
         return user != null && user.isEmailVerified
     }
 
+    fun signout() {
+        auth.signOut()
+    }
+
     fun login(email: String, password: String) {
         if (email.isBlank() || password.isBlank()) {
             _authState.value = AuthState.Error("Missing field")

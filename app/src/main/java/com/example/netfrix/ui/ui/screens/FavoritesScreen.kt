@@ -41,7 +41,7 @@ fun FavoritesScreen(navController: NavController, viewModel: MoviesViewModel = h
         Box(modifier = Modifier.padding(paddingValues)) {
             LazyColumn {
                 items(favoriteMovies) { movie ->
-                    MovieItem(movie = movie, onFavoriteClick = { viewModel.toggleFavorite(it) }) {
+                    MovieItem(movie = movie, onFavoriteClick = { viewModel.toggleFavorite(movie) }) {
                         navController.navigate("detailscreen/${movie.id}")
                     }
                 }

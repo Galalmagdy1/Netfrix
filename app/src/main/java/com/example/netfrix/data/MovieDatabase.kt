@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import com.example.netfrix.converters.ListConverter
 import com.example.netfrix.models.Movie
 
-@Database(entities = [Movie::class], version = 4, exportSchema = false)
+@Database(entities = [Movie::class], version = 5, exportSchema = false)
 @TypeConverters(ListConverter::class)
 abstract class MovieDatabase : RoomDatabase() {
     abstract fun movieDao(): MovieDao

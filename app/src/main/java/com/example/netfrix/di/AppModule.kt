@@ -2,14 +2,16 @@ package com.example.netfrix.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.netfrix.BuildConfig
 import com.example.netfrix.data.MovieDatabase
-import com.example.netfrix.network.MovieApiService
+import com.example.netfrix.data.remote.MovieService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -19,7 +21,6 @@ import javax.inject.Singleton
 object AppModule {
 
     private const val BASE_URL = "https://api.themoviedb.org/3/"
-    private const val API_KEY = "9a68f3bb6f401b5eeb21e015f12552df"
 
     @Singleton
     @Provides
@@ -36,26 +37,30 @@ object AppModule {
     @Singleton
     @Provides
     fun provideHttpClient(): OkHttpClient {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
         return OkHttpClient.Builder()
-            .addInterceptor {
-                val original = it.request()
+            .addInterceptor { chain ->
+                val original = chain.request()
                 val url = original.url.newBuilder()
-                    .addQueryParameter("api_key", API_KEY)
+                    .addQueryParameter("api_key", BuildConfig.TMDB_API_KEY)
                     .build()
                 val request = original.newBuilder().url(url).build()
-                it.proceed(request)
+                chain.proceed(request)
             }
+            .addInterceptor(loggingInterceptor)
             .build()
     }
 
     @Singleton
     @Provides
-    fun provideMovieApiService(client: OkHttpClient): MovieApiService {
+    fun provideMovieService(client: OkHttpClient): MovieService {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(MovieApiService::class.java)
+            .create(MovieService::class.java)
     }
 }

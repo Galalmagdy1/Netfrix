@@ -11,7 +11,7 @@ import com.example.netfrix.ui.ui.screens.LoginScreen
 import com.example.netfrix.ui.ui.screens.MainScreen
 import com.example.netfrix.ui.ui.screens.SignUpScreen
 import com.example.netfrix.ui.ui.screens.SplashScreen
-import com.example.netfrix.ui.ui.screens.details.DetailsScreen
+import com.example.netfrix.ui.ui.screens.details.MovieDetailScreen
 
 @Composable
 fun NewGraph() {
@@ -43,7 +43,7 @@ fun NewGraph() {
                 onNavigateToForgotPassword = { navController.navigate("forgot") },
                 onNavigateToHome = {
                     navController.navigate("main") {
-                        popUpTo("login") { 
+                        popUpTo("login") {
                             inclusive = true
                         }
                         launchSingleTop = true
@@ -81,10 +81,13 @@ fun NewGraph() {
             route = "detailscreen/{movieId}",
             arguments = listOf(navArgument("movieId") { type = NavType.IntType })
         ) { backStackEntry ->
-            DetailsScreen(
-                navController = navController,
-                movieId = backStackEntry.arguments?.getInt("movieId")
-            )
+            val movieId = backStackEntry.arguments?.getInt("movieId")
+            if (movieId != null) {
+                MovieDetailScreen(
+                    navController = navController,
+                    movieId = movieId
+                )
+            }
         }
     }
 }

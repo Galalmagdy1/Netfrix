@@ -4,8 +4,8 @@ package com.example.netfrix.ui.ui.screens.details
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -23,9 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -46,8 +48,7 @@ fun MovieItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.height(250.dp) // Set a fixed height for the card
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -56,9 +57,33 @@ fun MovieItem(
                     .build(),
                 contentDescription = "Movie Poster",
                 contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            // Gradient overlay
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
+                    .height(100.dp)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(Color.Transparent, Color.Black),
+                            startY = 0f,
+                            endY = Float.POSITIVE_INFINITY
+                        )
+                    )
+                    .align(Alignment.BottomCenter)
+            )
+
+            Text(
+                text = movie.title ?: "N/A",
+                style = MaterialTheme.typography.titleMedium,
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(12.dp)
+                    .fillMaxWidth()
             )
 
             Box(
@@ -69,7 +94,6 @@ fun MovieItem(
                     .background(Color.Black.copy(alpha = 0.5f))
                     .clickable(onClick = { onFavoriteClick(movie) })
                     .padding(8.dp)
-
             ) {
                 Icon(
                     imageVector = if (movie.isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
@@ -77,14 +101,6 @@ fun MovieItem(
                     tint = if (movie.isFavorite) Color.Red else Color.White,
                     modifier = Modifier.size(24.dp)
                 )
-            }
-
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(12.dp)
-            ) {
-                Text(text = movie.title ?: "N/A", style = MaterialTheme.typography.headlineSmall, color = Color.White)
             }
         }
     }

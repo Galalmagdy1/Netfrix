@@ -1,3 +1,4 @@
+
 package com.example.netfrix.di
 
 import android.content.Context
@@ -5,6 +6,8 @@ import androidx.room.Room
 import com.example.netfrix.BuildConfig
 import com.example.netfrix.data.MovieDatabase
 import com.example.netfrix.data.remote.MovieService
+import com.example.netfrix.network.ConnectivityObserver
+import com.example.netfrix.network.NetworkConnectivityObserver
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -22,6 +25,12 @@ import javax.inject.Singleton
 object AppModule {
 
     private const val BASE_URL = "https://api.themoviedb.org/3/"
+
+    @Singleton
+    @Provides
+    fun provideConnectivityObserver(
+        @ApplicationContext context: Context
+    ): ConnectivityObserver = NetworkConnectivityObserver(context)
 
     @Singleton
     @Provides

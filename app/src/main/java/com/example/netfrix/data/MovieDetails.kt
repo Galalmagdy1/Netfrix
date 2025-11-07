@@ -1,6 +1,7 @@
 package com.example.netfrix.data
 
 import android.os.Parcelable
+import com.example.netfrix.models.Movie
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -120,4 +121,25 @@ data class MovieResult(
     val voteAverage: Double,
     @SerializedName("vote_count")
     val voteCount: Int
-) : Parcelable
+) : Parcelable {
+    companion object {
+        fun fromMovie(movie: Movie): MovieResult {
+            return MovieResult(
+                adult = false, // Assuming default value
+                backdropPath = movie.backdrop_path,
+                genreIds = emptyList(), // Assuming no genre IDs available from Movie
+                id = movie.id,
+                originalLanguage = "", // Assuming default value
+                originalTitle = "", // Assuming default value
+                overview = movie.overview ?: "",
+                popularity = 0.0, // Assuming default value
+                posterPath = movie.poster_path,
+                releaseDate = movie.release_date ?: "",
+                title = movie.title ?: "",
+                video = false, // Assuming default value
+                voteAverage = movie.vote_average ?: 0.0,
+                voteCount = 0 // Assuming default value
+            )
+        }
+    }
+}

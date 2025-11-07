@@ -7,6 +7,7 @@ import com.example.netfrix.data.MovieDetails
 import com.example.netfrix.data.MovieRepository
 import com.example.netfrix.data.MovieResult
 import com.example.netfrix.models.Movie
+import com.example.netfrix.network.ConnectivityObserver
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
@@ -16,6 +17,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,17 +29,15 @@ import kotlin.random.Random
 @HiltViewModel
 class MoviesViewModel @Inject constructor(
     private val repository: MovieRepository,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
-    // Private flow for movies from the API
     private val _apiMovies = MutableStateFlow<List<MovieResult>>(emptyList())
 
-    // Flow for favorite movies from the database
     val favoriteMovies: StateFlow<List<Movie>> = repository.getFavoriteMovies()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    // Public flow for the UI, combining API results with favorite status
     val movies: StateFlow<List<Movie>> = _apiMovies.combine(favoriteMovies) { apiMovies, favMovies ->
         val favIds = favMovies.map { it.id }.toSet()
         apiMovies.map { movieResult ->
@@ -72,6 +74,14 @@ class MoviesViewModel @Inject constructor(
 
     init {
         fetchMovies()
+
+        connectivityObserver.observe()
+            .onEach { status ->
+                if (status == ConnectivityObserver.Status.Available && _errorMessage.value?.contains("No internet connection") == true) {
+                    fetchMovies(isRefresh = true)
+                }
+            }
+            .launchIn(viewModelScope)
 
         // Debounce search query
         viewModelScope.launch {
@@ -116,7 +126,15 @@ class MoviesViewModel @Inject constructor(
                 val response = repository.getMovies(page)
                 _apiMovies.value = response.results // Update the private flow
             } catch (e: Exception) {
-                _errorMessage.value = e.message
+                _errorMessage.value = "No internet connection. Displaying offline content."
+                // Fallback to local data
+                val localFavorites = repository.getFavoriteMovies().first()
+                if (localFavorites.isNotEmpty()) {
+                    _apiMovies.value = localFavorites.map { MovieResult.fromMovie(it) }
+                } else {
+                    val allMovies = repository.getAllMovies().first()
+                    _apiMovies.value = allMovies.map { MovieResult.fromMovie(it) }
+                }
             } finally {
                 _isLoading.value = false
             }

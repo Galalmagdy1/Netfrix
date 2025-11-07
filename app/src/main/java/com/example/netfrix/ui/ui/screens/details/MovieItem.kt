@@ -1,6 +1,7 @@
 
 package com.example.netfrix.ui.ui.screens.details
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,11 +13,10 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,16 +60,25 @@ fun MovieItem(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
             )
-            IconButton(
-                onClick = { onFavoriteClick(movie) },
-                modifier = Modifier.align(Alignment.TopEnd)
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp)
+                    .clip(CircleShape)
+                    .background(Color.Black.copy(alpha = 0.5f))
+                    .clickable(onClick = { onFavoriteClick(movie) })
+                    .padding(8.dp)
+
             ) {
                 Icon(
-                    imageVector = if (movie.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    imageVector = if (movie.isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                     contentDescription = "Favorite",
-                    tint = if (movie.isFavorite) Color.Red else Color.White
+                    tint = if (movie.isFavorite) Color.Red else Color.White,
+                    modifier = Modifier.size(24.dp)
                 )
             }
+
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomStart)

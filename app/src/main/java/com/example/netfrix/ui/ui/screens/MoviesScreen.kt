@@ -1,3 +1,4 @@
+
 package com.example.netfrix.ui.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
@@ -29,8 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.netfrix.data.MovieResult
-import com.example.netfrix.models.Movie
 import com.example.netfrix.ui.ui.screens.details.MovieItem
 import com.example.netfrix.viewmodel.AuthViewModel
 import com.example.netfrix.viewmodel.MoviesViewModel
@@ -93,11 +92,11 @@ fun MoviesScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(movies) { movieResult ->
+                        items(movies) { movie ->
                             MovieItem(
-                                movie = Movie(movieResult),
-                                onFavoriteClick = { viewModel.toggleFavorite(movieResult) },
-                                onItemClick = { navController.navigate("detailscreen/${movieResult.id}") }
+                                movie = movie,
+                                onFavoriteClick = { viewModel.toggleFavorite(movie) },
+                                onItemClick = { navController.navigate("detailscreen/${movie.id}") }
                             )
                         }
                     }

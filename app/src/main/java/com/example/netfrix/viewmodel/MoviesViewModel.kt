@@ -1,3 +1,4 @@
+
 package com.example.netfrix.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,11 +20,21 @@ import kotlin.random.Random
 @HiltViewModel
 class MoviesViewModel @Inject constructor(private val repository: MovieRepository) : ViewModel() {
 
-    private val _movies = MutableStateFlow<List<MovieResult>>(emptyList())
-    val movies: StateFlow<List<MovieResult>> = _movies
+    // Private flow for movies from the API
+    private val _apiMovies = MutableStateFlow<List<MovieResult>>(emptyList())
 
+    // Flow for favorite movies from the database
     val favoriteMovies: StateFlow<List<Movie>> = repository.getFavoriteMovies()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // Public flow for the UI, combining API results with favorite status
+    val movies: StateFlow<List<Movie>> = _apiMovies.combine(favoriteMovies) { apiMovies, favMovies ->
+        val favIds = favMovies.map { it.id }.toSet()
+        apiMovies.map { movieResult ->
+            Movie(movieResult).copy(isFavorite = favIds.contains(movieResult.id))
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -44,7 +56,7 @@ class MoviesViewModel @Inject constructor(private val repository: MovieRepositor
             try {
                 val page = if (isRefresh) Random.nextInt(1, 21) else 1
                 val response = repository.getMovies(page)
-                _movies.value = response.results
+                _apiMovies.value = response.results // Update the private flow
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             } finally {
@@ -67,24 +79,17 @@ class MoviesViewModel @Inject constructor(private val repository: MovieRepositor
         }
     }
 
-    fun toggleFavorite(movieResult: MovieResult) {
+    fun toggleFavorite(movie: Movie) {
         viewModelScope.launch {
-            val localMovie = repository.getMovieById(movieResult.id)
+            val localMovie = repository.getMovieById(movie.id)
             if (localMovie != null) {
                 repository.updateMovie(localMovie.copy(isFavorite = !localMovie.isFavorite))
             } else {
-                val newMovie = Movie(movieResult)
-                repository.insertMovie(newMovie.copy(isFavorite = true))
+                repository.insertMovie(movie.copy(isFavorite = true))
             }
         }
     }
-
-    fun toggleFavorite(movie: Movie) {
-        viewModelScope.launch {
-            repository.updateMovie(movie.copy(isFavorite = !movie.isFavorite))
-        }
-    }
-
+    
     fun toggleFavorite(movieDetails: MovieDetails) {
         viewModelScope.launch {
             val localMovie = repository.getMovieById(movieDetails.id)

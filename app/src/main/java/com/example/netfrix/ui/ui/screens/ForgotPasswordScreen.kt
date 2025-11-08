@@ -1,4 +1,4 @@
-package com.example.netfrix.ui.screens
+package com.example.netfrix.ui.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

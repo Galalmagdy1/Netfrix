@@ -21,19 +21,14 @@ fun SplashScreen(
     val DarkBlue = Color(0xFF0D0C1D)
     val PurpleBlue = Color(0xFFB74F7B)
 
-    // ده بيشتغل أول ما الشاشة تفتح
     LaunchedEffect(key1 = true) {
-        // هنا بنستخدم الدالة الجديدة
         if (viewModel.getCurrentVerifiedUser()) {
-            // لو مسجل وعمل verify -> روح للهوم
             onNavigateToHome()
         } else {
-            // لو مش مسجل أو مسجل بس معملش verify -> روح للوجن
             onNavigateToLogin()
         }
     }
 
-    // مجرد شاشة تحميل شكلية
     Box(
         modifier = Modifier
             .fillMaxSize()

@@ -1,5 +1,6 @@
 package com.example.netfrix.ui.ui.screens
 
+import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -30,6 +31,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.netfrix.ui.screens.SettingsScreen
+import com.example.netfrix.ui.ui.screens.settings.SettingsViewModel
 
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
     object Home : Screen("home", "Home", Icons.Default.Home)
@@ -46,7 +49,7 @@ val items = listOf(
 )
 
 @Composable
-fun MainScreen(mainNavController: NavHostController) {
+fun MainScreen(mainNavController: NavHostController, settingsViewModel: SettingsViewModel) {
     val navController = rememberNavController()
     val DarkBlue = Color(0xFF0D0C1D)
     val PurpleBlue = Color(0xFFB74F7B)
@@ -103,8 +106,11 @@ fun MainScreen(mainNavController: NavHostController) {
                 composable(Screen.Home.route) { MoviesScreen(navController = mainNavController) }
                 composable(Screen.Favorites.route) { FavoritesScreen(navController = mainNavController) }
                 composable(Screen.Search.route) { SearchScreen(navController = mainNavController) }
-                composable(Screen.Settings.route) { SettingsScreen() }
+                composable(Screen.Settings.route) {
+                    SettingsScreen(viewModel = settingsViewModel)
+                }
             }
         }
     }
 }
+

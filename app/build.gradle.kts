@@ -93,7 +93,12 @@ dependencies {
 
     //ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
+
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
     
     // SwipeRefresh
     implementation("com.google.accompanist:accompanist-swiperefresh:0.24.13-rc")
+    
+    implementation ("androidx.compose.material:material-icons-extended:1.7.8") // or latest version
+
 }

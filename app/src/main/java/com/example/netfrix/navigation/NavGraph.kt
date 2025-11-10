@@ -12,9 +12,12 @@ import com.example.netfrix.ui.ui.screens.MainScreen
 import com.example.netfrix.ui.ui.screens.SignUpScreen
 import com.example.netfrix.ui.ui.screens.SplashScreen
 import com.example.netfrix.ui.ui.screens.details.MovieDetailScreen
+import com.example.netfrix.ui.screens.SettingsScreen
+import com.example.netfrix.ui.ui.screens.Screen
+import com.example.netfrix.ui.ui.screens.settings.SettingsViewModel
 
 @Composable
-fun NewGraph() {
+fun NewGraph(settingsViewModel: SettingsViewModel) {
     val navController = rememberNavController()
 
     NavHost(
@@ -73,9 +76,15 @@ fun NewGraph() {
             )
         }
 
+
         composable("main") {
-            MainScreen(mainNavController = navController)
+            MainScreen(mainNavController = navController, settingsViewModel = settingsViewModel)
         }
+
+        composable(Screen.Settings.route) {
+            SettingsScreen(navController = navController)
+        }
+
 
         composable(
             route = "detailscreen/{movieId}",

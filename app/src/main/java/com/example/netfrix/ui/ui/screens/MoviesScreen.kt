@@ -104,7 +104,10 @@ fun MoviesScreen(
                         items(movies) { movie ->
                             MovieItem(
                                 movie = movie,
-                                onFavoriteClick = { viewModel.toggleFavorite(movie) },
+                                onFavoriteClick = {  if (!movie.isFavorite) {
+                                    viewModel.setLastFavorite(movie)   // NEW
+                                }
+                                    viewModel.toggleFavorite(movie) },
                                 onItemClick = { navController.navigate("detailscreen/${movie.id}") }
                             )
                         }

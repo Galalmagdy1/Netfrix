@@ -8,20 +8,24 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.netfrix.R
+import com.example.netfrix.notifications.NotificationHelper
 import com.example.netfrix.ui.ui.screens.settings.SettingsViewModel
 
 @Composable
 fun SettingsScreen(
     navController: NavController? = null,
-    viewModel: SettingsViewModel = viewModel()
+    settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val isDarkMode = viewModel.isDarkMode.collectAsState()
+    val isDarkMode by settingsViewModel.isDarkMode.collectAsState()
+    val context = LocalContext.current
 
-    var notificationsEnabled by remember { mutableStateOf(true) }
+    val notificationsEnabled by settingsViewModel.notificationsEnabled.collectAsState()
     var currentLanguage by remember { mutableStateOf("English") }
 
     Column(
@@ -45,8 +49,8 @@ fun SettingsScreen(
         ) {
             Text(text = "Dark Mode", fontSize = 18.sp)
             Switch(
-                checked = isDarkMode.value,
-                onCheckedChange = { viewModel.toggleDarkMode() }
+                checked = isDarkMode,
+                onCheckedChange = { settingsViewModel.toggleDarkMode() }
             )
         }
 
@@ -63,40 +67,18 @@ fun SettingsScreen(
             Text(text = "Notifications", fontSize = 18.sp)
             Switch(
                 checked = notificationsEnabled,
-                onCheckedChange = { notificationsEnabled = it }
-            )
-        }
-
-        Divider(modifier = Modifier.padding(vertical = 8.dp))
-
-        // Language selector
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    currentLanguage = if (currentLanguage == "English") "Arabic" else "English"
+                onCheckedChange = {
+                    settingsViewModel.toggleNotifications()
+                    if (it) {
+                        NotificationHelper.sendNotification(
+                            context = context,
+                            title = "Netfrix Notification",
+                            message = "Notifications enabled!",
+                            imageRes =R.mipmap.ic_launcher
+                        )
+                    }
                 }
-                .padding(vertical = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Language", fontSize = 18.sp)
-            Text(text = currentLanguage, color = Color.Gray)
-        }
-
-        Divider(modifier = Modifier.padding(vertical = 8.dp))
-
-        // Logout button
-        Button(
-            onClick = {
-                // Implement logout later
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Text(text = "Logout", fontSize = 18.sp)
+            )
         }
     }
 }

@@ -73,7 +73,11 @@ object AppModule {
             .build()
             .create(MovieService::class.java)
     }
-
+    @Provides
+    @Singleton
+    fun provideContext(@dagger.hilt.android.qualifiers.ApplicationContext context: Context): Context {
+        return context
+    }
     @Singleton
     @Provides
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()

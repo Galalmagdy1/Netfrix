@@ -107,7 +107,8 @@ fun MainScreen(mainNavController: NavHostController, settingsViewModel: Settings
                 composable(Screen.Favorites.route) { FavoritesScreen(navController = mainNavController) }
                 composable(Screen.Search.route) { SearchScreen(navController = mainNavController) }
                 composable(Screen.Settings.route) {
-                    SettingsScreen(viewModel = settingsViewModel)
+                    SettingsScreen(settingsViewModel = settingsViewModel)
+
                 }
             }
         }

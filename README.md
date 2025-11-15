@@ -1,126 +1,90 @@
-🎬 Project Name
+# 🎬 Project Name
+**Netfrix**
 
-Netfrix
+---
 
-👥 Team Members
+## 👥 Team Members 
+- **Galal Magdy** (Team Leader)  
+- **Ahmed Ashour**  
+- **Ahmed Sokrat**  
+- **Seif Emad**  
+- **Faisal Mahmoud**  
 
-Galal Magdy (Team Leader)
+---
 
-Ahmed Ashour
+## 💡 Project Idea
+An Android mobile application for streaming and browsing movies, similar to Netflix.  
+The app will allow users to explore, search, and watch movies with a simple and user-friendly interface.
 
-Ahmed Sokrat
+---
 
-Seif Emad
+## 🗓 Project Plan
 
-Faisal Mahmoud
+### **Week 1: Design & Setup**
+- Define the app idea and core **MVP features**.  
+- Create **Wireframes** and **UI/UX** designs (e.g., using Figma).  
+- Set up the project structure in Android Studio.  
+- Start building UI with **Jetpack Compose**:  
+  - Login/Sign up screen.  
+  - Home screen.  
+  - Navigation (Bottom Bar / Drawer).  
 
-💡 Project Idea
+---
 
-An Android mobile application for streaming and browsing movies, similar to Netflix.
-The app allows users to explore, search, and manage their favorite movies using a clean and modern Jetpack Compose design.
+### **Week 2: API & Data Layer**
+- Define **data models**.  
+- Integrate **Retrofit** for API calls.  
+- Implement **Repository Layer**.  
+- Add **Room Database** (if offline mode is needed).  
+- Connect UI with **ViewModel (MVVM pattern)**.  
+- Test the first endpoint (e.g., Login or Fetch List).  
 
-🗓 Project Plan
-Week 1: Design & Setup
+---
 
-Define the app idea and core MVP features.
+### **Week 3: Integration & Improvements**
+- Connect all screens with API.  
+- Handle **Loading & Error states** in UI.  
+- Apply **State Management** with ViewModel + StateFlow.  
+- Add animations and improve user experience with **Compose**.  
+- Write **basic tests** (Unit tests, Instrumentation tests).  
 
-Create Wireframes and UI/UX designs (e.g., using Figma).
+---
 
-Set up the project structure in Android Studio.
+### **Week 4: Final Touches & Release**
+- Fix bugs and polish features.  
+- Optimize performance (caching, network handling).  
+- Set up **App Icon & Splash Screen**.  
+- Test on multiple devices/emulators.  
 
-Start building UI with Jetpack Compose:
+---
 
-Login / Sign Up screen.
+## 📌 Team Responsibilities
 
-Splash screen.
+### 👨‍💻 Galal Magdy
+* Developed the full Authentication Module:
+    * Login
+    * Sign Up
+    * Forgot Password
+* Built the Splash Screen
+* Designed and implemented the App Icon
+* Integrated Firebase Authentication
+* Organized project structure and team workflow
 
-Home screen layout.
+### 🛠️ Ahmed Ashour
+* Implemented the application Notifications System
+* Fixed UI bugs and handled general issue solving
+* Assisted in improving UI responsiveness
 
-Navigation (Bottom Bar / Drawer).
+### ⚙️ Faisal Mahmoud
+* Built the complete Settings Screen
+* Developed settings logic and user preferences
+* Ensured smooth integration with the app flow
 
-Week 2: API & Data Layer
-
-Define data models.
-
-Integrate Retrofit for API calls.
-
-Implement Repository Layer.
-
-Add Room Database.
-
-Connect UI with ViewModel (MVVM pattern).
-
-Test first API endpoints (Fetch Movies).
-
-Week 3: Integration & Improvements
-
-Connect all screens with API & local DB.
-
-Implement Favorites, Search, and Home full flow.
-
-Handle Loading & Error states in UI.
-
-Apply State Management with ViewModel + StateFlow.
-
-Add animations and improve UI experience with Compose.
-
-Integrate Notifications.
-
-Week 4: Final Touches & Release
-
-Fix bugs and polish features.
-
-Improve performance (caching, network handling, recomposition).
-
-Add App Icon, optimize Splash Screen, and ensure Firebase setup.
-
-Final testing across multiple devices/emulators.
-
-📌 Team Responsibilities
-Galal Magdy
-
-Responsible for the full Authentication Module:
-
-Login Screen
-
-Sign Up Screen
-
-Forgot Password
-
-Built the Splash Screen and App Icon.
-
-Integrated Firebase Authentication and Firebase logic.
-
-Organized project structure and coordinated tasks as Team Leader.
-
-Ahmed Ashour
-
-Implemented the full Notifications System.
-
-Responsible for fixing UI bugs and general app issues.
-
-Improved UI/UX responsiveness and stability.
-
-Faisal Mahmoud
-
-Developed and designed the complete Settings Screen.
-
-Managed user preferences and settings logic.
-
-Integrated settings with the rest of the application flow.
-
-Seif Emad & Ahmed Sokrat
-
-Developed the API integration using Retrofit.
-
-Implemented Room Database (movies caching, favorites).
-
-Built:
-
-Home Screen
-
-Search Screen
-
-Favorites Screen
-
-Connected data layer to UI using MVVM + StateFlow.
+### 💻 Seif Emad & Ahmed Sokrat
+* Handled API integration using Retrofit
+* Implemented Room Database for caching and favorites
+* Developed:
+    * Home Screen
+    * Search Screen
+    * Favorites Screen
+* Connected data layer with UI using MVVM + StateFlow

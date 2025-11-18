@@ -3,18 +3,39 @@ package com.example.netfrix.ui.ui.screens
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -34,9 +55,6 @@ fun LoginScreen(
     onNavigateToForgotPassword: () -> Unit,
     onNavigateToHome: () -> Unit
 ) {
-    val DarkBlue = Color(0xFF0D0C1D)
-    val PurpleBlue = Color(0xFFB74F7B)
-
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -45,11 +63,9 @@ fun LoginScreen(
     val authState by viewModel.authState.collectAsState()
     val context = LocalContext.current
 
-
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Error -> {
-
                 Toast.makeText(context, (authState as AuthState.Error).message, Toast.LENGTH_LONG).show()
                 viewModel.clearState()
             }
@@ -65,11 +81,7 @@ fun LoginScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(PurpleBlue, DarkBlue)
-                )
-            )
+            .background(MaterialTheme.colorScheme.background)
             .padding(24.dp)
     ) {
         Column(
@@ -81,7 +93,7 @@ fun LoginScreen(
         ) {
             Text(
                 text = "Welcome Back 👋",
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 40.dp)
@@ -90,17 +102,17 @@ fun LoginScreen(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email", color = Color.White.copy(alpha = 0.8f)) },
-                textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
+                label = { Text("Email") },
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground, fontSize = 16.sp),
                 shape = RoundedCornerShape(30.dp),
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedContainerColor = Color.White.copy(alpha = 0.1f),
-                    unfocusedContainerColor = Color.White.copy(alpha = 0.1f),
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    cursorColor = Color.White
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    cursorColor = MaterialTheme.colorScheme.primary
                 ),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier
@@ -112,17 +124,17 @@ fun LoginScreen(
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password", color = Color.White.copy(alpha = 0.8f)) },
-                textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
+                label = { Text("Password") },
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground, fontSize = 16.sp),
                 shape = RoundedCornerShape(30.dp),
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedContainerColor = Color.White.copy(alpha = 0.1f),
-                    unfocusedContainerColor = Color.White.copy(alpha = 0.1f),
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    cursorColor = Color.White
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    cursorColor = MaterialTheme.colorScheme.primary
                 ),
                 visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
@@ -130,7 +142,7 @@ fun LoginScreen(
                         Icon(
                             imageVector = if (isPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                             contentDescription = "Toggle Password",
-                            tint = Color.White
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 },
@@ -143,7 +155,7 @@ fun LoginScreen(
 
             Text(
                 text = "Forgot Password?",
-                color = Color(0xFF2196F3),
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier
@@ -159,7 +171,7 @@ fun LoginScreen(
                     viewModel.login(email, password)
                 },
                 shape = RoundedCornerShape(30.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -167,11 +179,11 @@ fun LoginScreen(
             ) {
                 if (authState is AuthState.Loading) {
                     CircularProgressIndicator(
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(24.dp)
                     )
                 } else {
-                    Text("Login", color = Color.White, fontSize = 18.sp)
+                    Text("Login", color = MaterialTheme.colorScheme.onPrimary, fontSize = 18.sp)
                 }
             }
 
@@ -183,11 +195,11 @@ fun LoginScreen(
             ) {
                 Text(
                     text = "Don’t have an account? ",
-                    color = Color.White.copy(alpha = 0.8f)
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
                 )
                 Text(
                     text = "Sign Up",
-                    color = Color(0xFF2196F3),
+                    color = MaterialTheme.colorScheme.primary,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.clickable {
                         onNavigateToSignUp()

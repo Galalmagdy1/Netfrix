@@ -2,14 +2,30 @@ package com.example.netfrix.ui.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -25,20 +41,13 @@ fun ForgotPasswordScreen(
     onNavigateToLogin: () -> Unit,
     viewModel: AuthViewModel = viewModel()
 ) {
-    val darkBlue = Color(0xFF0D0C1D)
-    val purpleBlue = Color(0xFFB74F7B)
-
     var email by remember { mutableStateOf("") }
     val authState by viewModel.authState.collectAsState()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(purpleBlue, darkBlue)
-                )
-            )
+            .background(MaterialTheme.colorScheme.background)
             .padding(24.dp)
     ) {
         Column(
@@ -50,7 +59,7 @@ fun ForgotPasswordScreen(
         ) {
             Text(
                 text = "Forgot Password",
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 28.dp)
@@ -59,20 +68,20 @@ fun ForgotPasswordScreen(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email", color = Color.White.copy(alpha = 0.8f)) },
-                textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
+                label = { Text("Email") },
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground, fontSize = 16.sp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedContainerColor = Color.White.copy(alpha = 0.07f),
-                    unfocusedContainerColor = Color.White.copy(alpha = 0.07f),
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    cursorColor = Color.White
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    cursorColor = MaterialTheme.colorScheme.primary
                 )
             )
 
@@ -84,9 +93,9 @@ fun ForgotPasswordScreen(
                     .fillMaxWidth()
                     .height(50.dp),
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(30.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3))
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text(text = "Send Reset Link", color = Color.White, fontSize = 16.sp)
+                Text(text = "Send Reset Link", color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
             }
 
             Spacer(modifier = Modifier.height(14.dp))
@@ -96,21 +105,21 @@ fun ForgotPasswordScreen(
                 is AuthState.Loading -> {
                     Text(
                         text = "Sending reset link...",
-                        color = Color.White.copy(alpha = 0.8f),
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
                         fontSize = 14.sp
                     )
                 }
                 is AuthState.Success -> {
                     Text(
                         text = state.message,
-                        color = Color(0xFF4CAF50),
+                        color = MaterialTheme.colorScheme.primary,
                         fontSize = 14.sp
                     )
                 }
                 is AuthState.Error -> {
                     Text(
                         text = state.message,
-                        color = Color.Red,
+                        color = MaterialTheme.colorScheme.error,
                         fontSize = 14.sp
                     )
                 }
@@ -125,12 +134,12 @@ fun ForgotPasswordScreen(
             ) {
                 Text(
                     text = "Remembered? ",
-                    color = Color.White.copy(alpha = 0.8f),
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
                     fontSize = 14.sp
                 )
                 Text(
                     text = "Login",
-                    color = Color(0xFF2196F3),
+                    color = MaterialTheme.colorScheme.primary,
                     fontSize = 14.sp,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.clickable { onNavigateToLogin() }

@@ -5,7 +5,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
     primary = TealAccent,
@@ -21,17 +20,17 @@ private val DarkColorScheme = darkColorScheme(
 private val LightColorScheme = lightColorScheme(
     primary = TealAccent,
     secondary = PinkAccent,
-    background = BackgroundDark,
-    surface = FieldFill,
+    background = BackgroundLight,
+    surface = White,
     onPrimary = White,
     onSecondary = White,
-    onBackground = White,
-    onSurface = White
+    onBackground = Black,
+    onSurface = Black
 )
 
 @Composable
 fun NetfrixTheme(
-    darkTheme: Boolean = true, // نثبّت الثيم داكن دايمًا
+    darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {

@@ -9,23 +9,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.netfrix.navigation.NewGraph
 import com.example.netfrix.notifications.NotificationHelper
-import com.example.netfrix.ui.ui.screens.settings.SettingsViewModel
-import com.example.netfrix.viewmodel.MoviesViewModel
+import com.example.netfrix.ui.theme.NetfrixTheme
 import com.google.firebase.FirebaseApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val moviesViewModel: MoviesViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
     private lateinit var notificationPermissionLauncher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,31 +31,30 @@ class MainActivity : ComponentActivity() {
 
         NotificationHelper.createNotificationChannel(this)
 
-        // طلب صلاحية الإشعارات لأندرويد 13+
+        // Request notification permission for Android 13+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             notificationPermissionLauncher = registerForActivityResult(
                 ActivityResultContracts.RequestPermission()
             ) { isGranted ->
                 if (!isGranted) {
-                    // ممكن تعرض تحذير هنا
+                    // You might want to show a warning here
                 }
             }
             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
 
         setContent {
-            val settingsViewModel: SettingsViewModel = hiltViewModel()
-            val isDarkMode by settingsViewModel.isDarkMode.collectAsState()
+            val isDarkMode by mainViewModel.isDarkMode.collectAsState()
 
-            MaterialTheme(
-                colorScheme = if (isDarkMode) darkColorScheme() else lightColorScheme()
+            NetfrixTheme(
+                darkTheme = isDarkMode
             ) {
-                NewGraph(settingsViewModel = settingsViewModel)
+                NewGraph()
             }
         }
     }
 
-    // لما المستخدم يرجع للتطبيق
+    // When the user returns to the app
     override fun onResume() {
         super.onResume()
         NotificationHelper.sendNotification(
@@ -70,11 +64,11 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-    // لما المستخدم يخرج من التطبيق
+    // When the user leaves the app
     override fun onPause() {
         super.onPause()
 
-        // جلب آخر مفضل من SharedPreferences
+        // Get the last favorite from SharedPreferences
         val prefs = getSharedPreferences("netfrix_prefs", MODE_PRIVATE)
         val lastFavTitle = prefs.getString("last_fav_title", null)
 
@@ -84,7 +78,7 @@ class MainActivity : ComponentActivity() {
                 title = "Favourite Reminder",
                 message = "You have '$lastFavTitle' in your favourites 🍿"
             )
-            // امسح آخر مفضل بعد الإشعار
+            // Clear the last favorite after the notification
             prefs.edit().remove("last_fav_title").apply()
         }
     }

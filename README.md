@@ -13,8 +13,8 @@
 ---
 
 ## 💡 Project Idea
-An Android mobile application for streaming and browsing movies, similar to Netflix.  
-The app will allow users to explore, search, and watch movies with a simple and user-friendly interface.
+An Android mobile application for browsing and exploring detailed movie information, similar to a movie database interface.
+The app allows users to explore, search, and view comprehensive movie details with a simple and user-friendly interface without streaming capabilities.
 
 ---
 
@@ -27,7 +27,7 @@ The app will allow users to explore, search, and watch movies with a simple and 
 - Start building UI with **Jetpack Compose**:  
   - Login/Sign up screen.  
   - Home screen.  
-  - Navigation (Bottom Bar / Drawer).  
+  - Navigation (Bottom Bar) 
 
 ---
 

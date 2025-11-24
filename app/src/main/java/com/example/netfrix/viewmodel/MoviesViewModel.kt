@@ -180,6 +180,9 @@ class MoviesViewModel @Inject constructor(
 
             if (isNowFavorite) {
                 setLastFavorite(movie)
+                // Set flag to indicate a movie was recently added to favorites
+                val prefs = context.getSharedPreferences("netfrix_prefs", Context.MODE_PRIVATE)
+                prefs.edit().putBoolean("has_recent_favorite", true).apply()
             }
         }
     }

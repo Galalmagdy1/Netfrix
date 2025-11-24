@@ -18,6 +18,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -49,10 +50,28 @@ val items = listOf(
 )
 
 @Composable
-fun MainScreen(mainNavController: NavHostController, settingsViewModel: SettingsViewModel) {
+fun MainScreen(
+    mainNavController: NavHostController,
+    settingsViewModel: SettingsViewModel,
+    openFavorites: Boolean,
+    onFavoritesHandled: () -> Unit
+) {
     val navController = rememberNavController()
     val DarkBlue = Color(0xFF0D0C1D)
     val PurpleBlue = Color(0xFFB74F7B)
+
+    LaunchedEffect(openFavorites) {
+        if (openFavorites) {
+            navController.navigate(Screen.Favorites.route) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+            onFavoritesHandled()
+        }
+    }
 
     Box(
         modifier = Modifier

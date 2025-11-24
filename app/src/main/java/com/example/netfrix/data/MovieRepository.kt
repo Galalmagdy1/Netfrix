@@ -3,6 +3,7 @@ package com.example.netfrix.data
 import com.example.netfrix.data.remote.MovieService
 import com.example.netfrix.models.Movie
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class MovieRepository @Inject constructor(
@@ -25,4 +26,12 @@ class MovieRepository @Inject constructor(
     suspend fun getMovieById(id: Int): Movie? = movieDao.getMovieById(id)
 
     suspend fun insertMovie(movie: Movie) = movieDao.insert(movie)
+    
+    suspend fun getFavoriteMoviesCount(): Int {
+        return getFavoriteMovies().first().size
+    }
+    
+    suspend fun getFavoriteMoviesList(): List<Movie> {
+        return getFavoriteMovies().first()
+    }
 }

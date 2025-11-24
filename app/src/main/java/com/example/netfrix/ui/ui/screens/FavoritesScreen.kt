@@ -18,14 +18,15 @@
             import androidx.compose.foundation.shape.CornerSize
             import androidx.compose.foundation.shape.RoundedCornerShape
             import androidx.compose.material.icons.Icons
-            import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Favorite
             import androidx.compose.material.icons.filled.MoreVert
             import androidx.compose.material3.Card
             import androidx.compose.material3.CardDefaults
             import androidx.compose.material3.DropdownMenu
             import androidx.compose.material3.DropdownMenuItem
             import androidx.compose.material3.ExperimentalMaterial3Api
-            import androidx.compose.material3.Icon
+import androidx.compose.material3.Icon
             import androidx.compose.material3.IconButton
             import androidx.compose.material3.MaterialTheme
             import androidx.compose.material3.Scaffold
@@ -100,9 +101,15 @@
                         } else {
                             LazyColumn {
                                 items(favoriteMovies) { movie ->
-                                    FavoriteMovieItem(movie = movie) {
-                                        navController.navigate("detailscreen/${movie.id}")
-                                    }
+                                    FavoriteMovieItem(
+                                        movie = movie,
+                                        onItemClick = {
+                                            navController.navigate("detailscreen/${movie.id}")
+                                        },
+                                        onRemoveClick = {
+                                            viewModel.toggleFavorite(movie)
+                                        }
+                                    )
                                 }
                             }
                         }
@@ -111,7 +118,11 @@
             }
 
             @Composable
-            fun FavoriteMovieItem(movie: Movie, onItemClick: (Int) -> Unit) {
+            fun FavoriteMovieItem(
+                movie: Movie,
+                onItemClick: (Int) -> Unit,
+                onRemoveClick: () -> Unit
+            ) {
                 Card(
                     modifier = Modifier
                         .padding(horizontal = 8.dp, vertical = 4.dp)
@@ -149,6 +160,14 @@
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text("Favorite", style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.8f))
                             }
+                        }
+
+                        IconButton(onClick = onRemoveClick) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Remove from favorites",
+                                tint = Color.White
+                            )
                         }
                     }
                 }

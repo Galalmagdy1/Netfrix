@@ -1,8 +1,11 @@
 package com.example.netfrix
 
 import android.Manifest
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -14,19 +17,30 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.lifecycleScope
+import com.example.netfrix.data.MovieRepository
 import com.example.netfrix.navigation.NewGraph
 import com.example.netfrix.notifications.NotificationHelper
 import com.example.netfrix.ui.ui.screens.settings.SettingsViewModel
 import com.example.netfrix.viewmodel.MoviesViewModel
 import com.google.firebase.FirebaseApp
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val moviesViewModel: MoviesViewModel by viewModels()
     private lateinit var notificationPermissionLauncher: ActivityResultLauncher<String>
+
+    @Inject
+    lateinit var movieRepository: MovieRepository
+
+    private val notificationHandler = Handler(Looper.getMainLooper())
+    private val openFavoritesState = mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,14 +49,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         NotificationHelper.createNotificationChannel(this)
+        handleNotificationIntent(intent)
 
-        // طلب صلاحية الإشعارات لأندرويد 13+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             notificationPermissionLauncher = registerForActivityResult(
                 ActivityResultContracts.RequestPermission()
             ) { isGranted ->
                 if (!isGranted) {
-                    // ممكن تعرض تحذير هنا
                 }
             }
             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
@@ -55,12 +68,20 @@ class MainActivity : ComponentActivity() {
             MaterialTheme(
                 colorScheme = if (isDarkMode) darkColorScheme() else lightColorScheme()
             ) {
-                NewGraph(settingsViewModel = settingsViewModel)
+                NewGraph(
+                    settingsViewModel = settingsViewModel,
+                    openFavorites = openFavoritesState.value,
+                    onFavoritesHandled = { openFavoritesState.value = false }
+                )
             }
         }
     }
 
-    // لما المستخدم يرجع للتطبيق
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleNotificationIntent(intent)
+    }
+
     override fun onResume() {
         super.onResume()
         NotificationHelper.sendNotification(
@@ -70,22 +91,55 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-    // لما المستخدم يخرج من التطبيق
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
 
-        // جلب آخر مفضل من SharedPreferences
         val prefs = getSharedPreferences("netfrix_prefs", MODE_PRIVATE)
-        val lastFavTitle = prefs.getString("last_fav_title", null)
+        val hasRecentFavorite = prefs.getBoolean("has_recent_favorite", false)
 
-        if (lastFavTitle != null) {
-            NotificationHelper.sendNotification(
-                context = applicationContext,
-                title = "Favourite Reminder",
-                message = "You have '$lastFavTitle' in your favourites 🍿"
-            )
-            // امسح آخر مفضل بعد الإشعار
-            prefs.edit().remove("last_fav_title").apply()
+        if (hasRecentFavorite) {
+            lifecycleScope.launch {
+                try {
+                    val favoriteMovies = movieRepository.getFavoriteMoviesList()
+
+                    if (favoriteMovies.isNotEmpty()) {
+                        notificationHandler.postDelayed({
+                            val count = favoriteMovies.size
+                            val message = if (count == 1) {
+                                "You have '${favoriteMovies.first().title}' in your favourites. Come and watch it! 🍿"
+                            } else {
+                                "You have $count movies in your favourites. Come and watch them back! 🍿"
+                            }
+
+                            NotificationHelper.sendNotification(
+                                context = applicationContext,
+                                title = "Favourite Reminder",
+                                message = message,
+                                openFavorites = true
+                            )
+
+                            prefs.edit().putBoolean("has_recent_favorite", false).apply()
+                        }, 2000)
+                    } else {
+                        prefs.edit().putBoolean("has_recent_favorite", false).apply()
+                    }
+                } catch (e: Exception) {
+                    prefs.edit().putBoolean("has_recent_favorite", false).apply()
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        notificationHandler.removeCallbacksAndMessages(null)
+    }
+
+    private fun handleNotificationIntent(intent: Intent?) {
+        if (intent == null) return
+        if (intent.getBooleanExtra("open_favorites", false)) {
+            openFavoritesState.value = true
+            intent.removeExtra("open_favorites")
         }
     }
 

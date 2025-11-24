@@ -84,11 +84,16 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        NotificationHelper.sendNotification(
-            context = applicationContext,
-            title = "Welcome back!",
-            message = "What do you want to watch today?"
-        )
+        // Check if notifications are enabled before sending
+        val prefs = getSharedPreferences("netfrix_prefs", MODE_PRIVATE)
+        val notificationsEnabled = prefs.getBoolean("notifications_enabled", true)
+        if (notificationsEnabled) {
+            NotificationHelper.sendNotification(
+                context = applicationContext,
+                title = "Welcome back!",
+                message = "What do you want to watch today?"
+            )
+        }
     }
 
     override fun onStop() {
@@ -104,20 +109,24 @@ class MainActivity : ComponentActivity() {
 
                     if (favoriteMovies.isNotEmpty()) {
                         notificationHandler.postDelayed({
-                            val count = favoriteMovies.size
-                            val message = if (count == 1) {
-                                "You have '${favoriteMovies.first().title}' in your favourites. Come and watch it! 🍿"
-                            } else {
-                                "You have $count movies in your favourites. Come and watch them back! 🍿"
+                            // Check if notifications are enabled before sending
+                            val notificationsEnabled = prefs.getBoolean("notifications_enabled", true)
+                            if (notificationsEnabled) {
+                                val count = favoriteMovies.size
+                                val message = if (count == 1) {
+                                    "You have '${favoriteMovies.first().title}' in your favourites. Come and watch it! 🍿"
+                                } else {
+                                    "You have $count movies in your favourites. Come and watch them back! 🍿"
+                                }
+
+                                NotificationHelper.sendNotification(
+                                    context = applicationContext,
+                                    title = "Favourite Reminder",
+                                    message = message,
+                                    openFavorites = true
+                                )
                             }
-
-                            NotificationHelper.sendNotification(
-                                context = applicationContext,
-                                title = "Favourite Reminder",
-                                message = message,
-                                openFavorites = true
-                            )
-
+                            
                             prefs.edit().putBoolean("has_recent_favorite", false).apply()
                         }, 2000)
                     } else {

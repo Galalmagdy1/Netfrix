@@ -67,14 +67,15 @@ fun SettingsScreen(
             Text(text = "Notifications", fontSize = 18.sp)
             Switch(
                 checked = notificationsEnabled,
-                onCheckedChange = {
+                onCheckedChange = { newValue ->
                     settingsViewModel.toggleNotifications()
-                    if (it) {
+                    // Optionally send a test notification when enabled
+                    if (newValue) {
                         NotificationHelper.sendNotification(
                             context = context,
-                            title = "Netfrix Notification",
-                            message = "Notifications enabled!",
-                            imageRes =R.mipmap.ic_launcher
+                            title = "Notifications Enabled",
+                            message = "You'll receive notifications from Netfrix!",
+                            imageRes = R.mipmap.ic_launcher
                         )
                     }
                 }

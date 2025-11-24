@@ -34,6 +34,13 @@ object NotificationHelper {
 
     @SuppressLint("MissingPermission")
     fun sendNotification(context: Context, title: String, message: String, imageRes: Int? = null, url: String? = null, openFavorites: Boolean = false) {
+        // Check if notifications are enabled in app settings
+        val prefs = context.getSharedPreferences("netfrix_prefs", Context.MODE_PRIVATE)
+        val notificationsEnabled = prefs.getBoolean("notifications_enabled", true)
+        if (!notificationsEnabled) {
+            return
+        }
+        
         if (!areNotificationsPermitted(context)) {
             return
         }

@@ -50,6 +50,7 @@
     import androidx.hilt.navigation.compose.hiltViewModel
     import androidx.navigation.NavController
     import coil.compose.AsyncImage
+    import com.example.netfrix.models.Movie
     import com.example.netfrix.viewmodel.MoviesViewModel
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -77,16 +78,26 @@
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                         }
                     },
-                    //IconButton(onClick = { viewModel.run { toggleFavorite() } }) {
-                    //                                Icon(
-                    //                                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    //                                    contentDescription = "Favorite",
-                    //                                    tint = if (isFavorite) Color.Red else Color.White
-                    //                                )
-                    //                            }
                     actions = {
-                        movieDetails?.let {
-
+                        movieDetails?.let { details ->
+                            IconButton(onClick = {
+                                val movie = Movie(
+                                    id = details.id,
+                                    title = details.title,
+                                    overview = details.overview ?: "",
+                                    poster_path = details.posterPath,
+                                    backdrop_path = details.backdropPath,
+                                    release_date = details.releaseDate,
+                                    vote_average = details.voteAverage
+                                )
+                                viewModel.toggleFavorite(movie)
+                            }) {
+                                Icon(
+                                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                    contentDescription = "Favorite",
+                                    tint = if (isFavorite) Color.Red else Color.White
+                                )
+                            }
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
@@ -104,7 +115,7 @@
                 } else {
                     // Background Image (Blurred) - Draws behind everything
                     AsyncImage(
-                        model = "https://image.tmdb.org/t/p/w500${movieDetails?.backdropPath}",
+                        model = "https://image.tmdb.org/t/p/w500${movieDetails?.backdropPath ?: ""}",
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -143,7 +154,7 @@
                                 modifier = Modifier.height(280.dp)
                             ) {
                                 AsyncImage(
-                                    model = "https://image.tmdb.org/t/p/w500${movieDetails?.posterPath}",
+                                    model = "https://image.tmdb.org/t/p/w500${movieDetails?.posterPath ?: ""}",
                                     contentDescription = "Movie Poster",
                                     contentScale = ContentScale.Crop
                                 )
@@ -287,7 +298,7 @@
                         }
 
                         item {
-                            Spacer(modifier = Modifier.height(32.dp)) // Add some padding at the bottom
+                            Spacer(modifier = Modifier.height(32.dp))
                         }
                     }
                 }

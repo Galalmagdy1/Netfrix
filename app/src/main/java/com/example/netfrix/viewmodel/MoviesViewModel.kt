@@ -22,14 +22,13 @@ class MoviesViewModel @Inject constructor(
     private val repository: MovieRepository,
     private val firebaseAuth: FirebaseAuth,
     private val connectivityObserver: ConnectivityObserver,
-    private val context: Context // هستخدمه للـ SharedPreferences
+    private val context: Context
 ) : ViewModel() {
 
     private val _apiMovies = MutableStateFlow<List<MovieResult>>(emptyList())
     private var lastFavoriteAdded: Movie? = null
 
     fun getLastFavoriteAdded(): Movie? {
-        // إذا فاضي بالذاكرة، استرجع من SharedPreferences
         if (lastFavoriteAdded == null) {
             val prefs = context.getSharedPreferences("movie_prefs", Context.MODE_PRIVATE)
             val id = prefs.getInt("last_fav_id", -1)

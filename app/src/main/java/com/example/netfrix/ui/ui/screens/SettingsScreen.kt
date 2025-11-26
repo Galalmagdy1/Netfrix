@@ -1,32 +1,39 @@
 package com.example.netfrix.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.netfrix.R
-import com.example.netfrix.notifications.NotificationHelper
+import com.example.netfrix.NotificationHelper
+import com.example.netfrix.ui.ui.screens.Screen
 import com.example.netfrix.ui.ui.screens.settings.SettingsViewModel
 
 @Composable
 fun SettingsScreen(
-    navController: NavController? = null,
+    navController: NavController,
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val isDarkMode by settingsViewModel.isDarkMode.collectAsState()
     val context = LocalContext.current
-
     val notificationsEnabled by settingsViewModel.notificationsEnabled.collectAsState()
-    var currentLanguage by remember { mutableStateOf("English") }
+    val userEmail by settingsViewModel.userEmail.collectAsState()
 
     Column(
         modifier = Modifier
@@ -36,25 +43,53 @@ fun SettingsScreen(
         Text(
             text = "Settings",
             style = MaterialTheme.typography.headlineMedium,
+            color = Color.White,
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
-        // Dark Mode toggle
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Dark Mode", fontSize = 18.sp)
-            Switch(
-                checked = isDarkMode,
-                onCheckedChange = { settingsViewModel.toggleDarkMode() }
+        // Display user email
+        userEmail?.let {
+            Text(
+                text = it,
+                fontSize = 24.sp,
+                color = Color.White,
+                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
             )
         }
 
-        Divider(modifier = Modifier.padding(vertical = 8.dp))
+
+        // Change Password
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .clickable {
+                    settingsViewModel.onPasswordChange {
+                        Toast.makeText(context, "Password reset email sent", Toast.LENGTH_SHORT).show()
+                    }
+                },
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Change Password",
+                fontSize = 18.sp,
+                color = Color.White,
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+            )
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                contentDescription = "Change Password Arrow",
+                tint = Color.White,
+                modifier = Modifier.size(30.dp)
+            )
+        }
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp),
+            thickness = DividerDefaults.Thickness,
+            color = Color.White
+        )
 
         // Notifications toggle
         Row(
@@ -64,7 +99,7 @@ fun SettingsScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Notifications", fontSize = 18.sp)
+            Text(text = "Notifications", fontSize = 18.sp , color = Color.White)
             Switch(
                 checked = notificationsEnabled,
                 onCheckedChange = { newValue ->
@@ -80,6 +115,30 @@ fun SettingsScreen(
                     }
                 }
             )
+        }
+
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp),
+            thickness = DividerDefaults.Thickness,
+            color = Color.White
+        )
+
+        // Logout
+        Button(
+            onClick = {
+                settingsViewModel.logout()
+                navController.navigate("login") {
+                    popUpTo(Screen.Home.route) {
+                        inclusive = true
+                    }
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 24.dp),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Text(text = "Logout", fontSize = 18.sp)
         }
     }
 }

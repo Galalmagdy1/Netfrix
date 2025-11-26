@@ -126,7 +126,7 @@ fun MainScreen(
                 composable(Screen.Favorites.route) { FavoritesScreen(navController = mainNavController) }
                 composable(Screen.Search.route) { SearchScreen(navController = mainNavController) }
                 composable(Screen.Settings.route) {
-                    SettingsScreen(settingsViewModel = settingsViewModel)
+                    SettingsScreen(settingsViewModel = settingsViewModel, navController = mainNavController)
 
                 }
             }

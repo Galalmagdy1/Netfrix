@@ -22,7 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import com.example.netfrix.data.MovieRepository
 import com.example.netfrix.navigation.NewGraph
-import com.example.netfrix.notifications.NotificationHelper
+import com.example.netfrix.NotificationHelper
 import com.example.netfrix.ui.ui.screens.settings.SettingsViewModel
 import com.example.netfrix.viewmodel.MoviesViewModel
 import com.google.firebase.FirebaseApp

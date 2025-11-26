@@ -65,7 +65,7 @@ fun SearchScreen(
                 }
             } else if (searchQuery.isBlank()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Search for movies and TV shows", color = Color.Gray)
+                    Text(text = "Search for movies and TV shows", color = Color.White)
                 }
             } else {
                 // Map search results to include favorite status
@@ -96,7 +96,7 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
-        placeholder = { Text("Search...") },
+        placeholder = { Text("Search...", color = Color.White) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),

@@ -33,6 +33,7 @@ fun SettingsScreen(
         Text(
             text = "Settings",
             style = MaterialTheme.typography.headlineMedium,
+            color = Color.White,
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
@@ -44,7 +45,7 @@ fun SettingsScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Notifications", fontSize = 18.sp)
+            Text(text = "Notifications", fontSize = 18.sp , color = Color.White)
             Switch(
                 checked = notificationsEnabled,
                 onCheckedChange = { newValue ->

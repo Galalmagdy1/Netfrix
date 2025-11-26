@@ -1,4 +1,4 @@
-package com.example.netfrix.notifications
+package com.example.netfrix
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -15,7 +15,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.example.netfrix.MainActivity
-import com.example.netfrix.R
 
 object NotificationHelper {
 

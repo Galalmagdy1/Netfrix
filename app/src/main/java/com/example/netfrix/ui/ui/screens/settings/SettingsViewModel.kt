@@ -71,8 +71,4 @@ class SettingsViewModel @Inject constructor(
     fun logout() {
         auth.signOut()
     }
-    // Helper function to check if notifications are enabled (for use in other classes)
-    fun areNotificationsEnabled(): Boolean {
-        return prefs.getBoolean(NOTIFICATIONS_ENABLED_KEY, true)
-    }
 }

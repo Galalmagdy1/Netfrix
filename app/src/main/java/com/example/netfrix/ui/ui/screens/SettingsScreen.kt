@@ -22,12 +22,9 @@ fun SettingsScreen(
     navController: NavController? = null,
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val isDarkMode by settingsViewModel.isDarkMode.collectAsState()
     val context = LocalContext.current
 
     val notificationsEnabled by settingsViewModel.notificationsEnabled.collectAsState()
-    var currentLanguage by remember { mutableStateOf("English") }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -38,23 +35,6 @@ fun SettingsScreen(
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(bottom = 24.dp)
         )
-
-        // Dark Mode toggle
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Dark Mode", fontSize = 18.sp)
-            Switch(
-                checked = isDarkMode,
-                onCheckedChange = { settingsViewModel.toggleDarkMode() }
-            )
-        }
-
-        Divider(modifier = Modifier.padding(vertical = 8.dp))
 
         // Notifications toggle
         Row(

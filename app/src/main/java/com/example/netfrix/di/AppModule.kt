@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.netfrix.BuildConfig
 import com.example.netfrix.data.MovieDatabase
-import com.example.netfrix.data.remote.MovieService
+import com.example.netfrix.network.MovieService
 import com.example.netfrix.network.ConnectivityObserver
 import com.example.netfrix.network.NetworkConnectivityObserver
 import com.google.firebase.auth.FirebaseAuth
@@ -75,7 +75,7 @@ object AppModule {
     }
     @Provides
     @Singleton
-    fun provideContext(@dagger.hilt.android.qualifiers.ApplicationContext context: Context): Context {
+    fun provideContext(@ApplicationContext context: Context): Context {
         return context
     }
     @Singleton

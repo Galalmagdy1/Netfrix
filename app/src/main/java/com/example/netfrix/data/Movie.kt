@@ -1,15 +1,10 @@
 package com.example.netfrix.data
 
 import android.os.Parcelable
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = "movies")
 data class Movie(
-    @PrimaryKey
     val id: Int,
     val adult: Boolean,
     val backdrop_path: String?,

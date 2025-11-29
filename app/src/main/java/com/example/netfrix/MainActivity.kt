@@ -11,7 +11,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -22,9 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import com.example.netfrix.data.MovieRepository
 import com.example.netfrix.navigation.NewGraph
-import com.example.netfrix.NotificationHelper
-import com.example.netfrix.ui.ui.screens.settings.SettingsViewModel
-import com.example.netfrix.viewmodel.MoviesViewModel
+import com.example.netfrix.viewmodel.SettingsViewModel
 import com.google.firebase.FirebaseApp
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -33,7 +30,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val moviesViewModel: MoviesViewModel by viewModels()
     private lateinit var notificationPermissionLauncher: ActivityResultLauncher<String>
 
     @Inject
@@ -132,7 +128,7 @@ class MainActivity : ComponentActivity() {
                     } else {
                         prefs.edit().putBoolean("has_recent_favorite", false).apply()
                     }
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     prefs.edit().putBoolean("has_recent_favorite", false).apply()
                 }
             }

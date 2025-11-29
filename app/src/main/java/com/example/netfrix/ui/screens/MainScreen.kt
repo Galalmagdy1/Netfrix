@@ -1,6 +1,5 @@
-package com.example.netfrix.ui.ui.screens
+package com.example.netfrix.ui.screens
 
-import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -32,7 +31,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.netfrix.ui.screens.SettingsScreen
 import com.example.netfrix.viewmodel.SettingsViewModel
 
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {

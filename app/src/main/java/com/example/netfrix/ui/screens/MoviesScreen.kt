@@ -1,5 +1,4 @@
-
-package com.example.netfrix.ui.ui.screens
+package com.example.netfrix.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -43,7 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.netfrix.ui.ui.screens.details.MovieItem
+import com.example.netfrix.ui.screens.details.MovieItem
 import com.example.netfrix.viewmodel.AuthViewModel
 import com.example.netfrix.viewmodel.MoviesViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh

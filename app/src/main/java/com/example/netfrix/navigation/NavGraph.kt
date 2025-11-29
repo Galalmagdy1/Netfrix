@@ -6,14 +6,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.netfrix.ui.ui.screens.ForgotPasswordScreen
-import com.example.netfrix.ui.ui.screens.LoginScreen
-import com.example.netfrix.ui.ui.screens.MainScreen
-import com.example.netfrix.ui.ui.screens.SignUpScreen
-import com.example.netfrix.ui.ui.screens.SplashScreen
-import com.example.netfrix.ui.ui.screens.details.MovieDetailScreen
+import com.example.netfrix.ui.screens.ForgotPasswordScreen
+import com.example.netfrix.ui.screens.LoginScreen
+import com.example.netfrix.ui.screens.MainScreen
+import com.example.netfrix.ui.screens.SignUpScreen
+import com.example.netfrix.ui.screens.SplashScreen
+import com.example.netfrix.ui.screens.details.MovieDetailScreen
 import com.example.netfrix.ui.screens.SettingsScreen
-import com.example.netfrix.ui.ui.screens.Screen
+import com.example.netfrix.ui.screens.Screen
 import com.example.netfrix.viewmodel.SettingsViewModel
 
 @Composable

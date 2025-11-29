@@ -1,4 +1,4 @@
-package com.example.netfrix.ui.ui.screens
+package com.example.netfrix.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -25,40 +25,37 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.netfrix.viewmodel.AuthState
 import com.example.netfrix.viewmodel.AuthViewModel
+import com.example.netfrix.viewmodel.AuthState
 
 @Composable
-fun SignUpScreen(
-    onNavigateToLogin: () -> Unit,
-    onNavigateToLoginAfterSuccess: () -> Unit
+fun LoginScreen(
+    onNavigateToSignUp: () -> Unit,
+    onNavigateToForgotPassword: () -> Unit,
+    onNavigateToHome: () -> Unit
 ) {
     val DarkBlue = Color(0xFF0D0C1D)
     val PurpleBlue = Color(0xFFB74F7B)
 
-    // ViewModel + State
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var isPasswordVisible by remember { mutableStateOf(false) }
+
     val viewModel: AuthViewModel = viewModel()
     val authState by viewModel.authState.collectAsState()
     val context = LocalContext.current
 
-    // Variables
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var isPasswordVisible by remember { mutableStateOf(false) }
-    var isConfirmPasswordVisible by remember { mutableStateOf(false) }
-
 
     LaunchedEffect(authState) {
         when (authState) {
-            is AuthState.Success -> {
+            is AuthState.Error -> {
 
-                Toast.makeText(context, (authState as AuthState.Success).message, Toast.LENGTH_LONG).show()
-                onNavigateToLoginAfterSuccess()
+                Toast.makeText(context, (authState as AuthState.Error).message, Toast.LENGTH_LONG).show()
                 viewModel.clearState()
             }
-            is AuthState.Error -> {
-                Toast.makeText(context, (authState as AuthState.Error).message, Toast.LENGTH_SHORT).show()
+            is AuthState.Success -> {
+                Toast.makeText(context, (authState as AuthState.Success).message, Toast.LENGTH_SHORT).show()
+                onNavigateToHome()
                 viewModel.clearState()
             }
             else -> {}
@@ -78,13 +75,12 @@ fun SignUpScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 130.dp, start = 24.dp, end = 24.dp),
+                .padding(top = 150.dp, start = 24.dp, end = 24.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Text(
-                text = "Create Account ✨",
+                text = "Welcome Back 👋",
                 color = Color.White,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
@@ -145,43 +141,22 @@ fun SignUpScreen(
                 enabled = authState != AuthState.Loading
             )
 
-            OutlinedTextField(
-                value = confirmPassword,
-                onValueChange = { confirmPassword = it },
-                label = { Text("Confirm Password", color = Color.White.copy(alpha = 0.8f)) },
-                textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
-                shape = RoundedCornerShape(30.dp),
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedContainerColor = Color.White.copy(alpha = 0.1f),
-                    unfocusedContainerColor = Color.White.copy(alpha = 0.1f),
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    cursorColor = Color.White
-                ),
-                visualTransformation = if (isConfirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = {
-                    IconButton(onClick = { isConfirmPasswordVisible = !isConfirmPasswordVisible }) {
-                        Icon(
-                            imageVector = if (isConfirmPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = "Toggle Confirm Password",
-                            tint = Color.White
-                        )
-                    }
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            Text(
+                text = "Forgot Password?",
+                color = Color(0xFF2196F3),
+                fontSize = 14.sp,
+                textDecoration = TextDecoration.Underline,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                enabled = authState != AuthState.Loading
+                    .align(Alignment.End)
+                    .clickable { onNavigateToForgotPassword() }
+                    .padding(top = 4.dp, end = 4.dp)
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
                 onClick = {
-                    viewModel.signUp(email, password, confirmPassword)
+                    viewModel.login(email, password)
                 },
                 shape = RoundedCornerShape(30.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
@@ -196,7 +171,7 @@ fun SignUpScreen(
                         modifier = Modifier.size(24.dp)
                     )
                 } else {
-                    Text("Sign Up", color = Color.White, fontSize = 18.sp)
+                    Text("Login", color = Color.White, fontSize = 18.sp)
                 }
             }
 
@@ -207,15 +182,15 @@ fun SignUpScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Already have an account? ",
+                    text = "Don’t have an account? ",
                     color = Color.White.copy(alpha = 0.8f)
                 )
                 Text(
-                    text = "Login",
+                    text = "Sign Up",
                     color = Color(0xFF2196F3),
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.clickable {
-                        onNavigateToLogin()
+                        onNavigateToSignUp()
                     }
                 )
             }

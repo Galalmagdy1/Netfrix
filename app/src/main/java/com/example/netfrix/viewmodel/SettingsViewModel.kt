@@ -30,10 +30,6 @@ class SettingsViewModel @Inject constructor(
     private val _isDarkMode = MutableStateFlow(false)
     val isDarkMode: StateFlow<Boolean> = _isDarkMode.asStateFlow()
 
-    fun toggleDarkMode() {
-        _isDarkMode.value = !_isDarkMode.value
-    }
-
     // Notifications - load from SharedPreferences on init
     private val _notificationsEnabled = MutableStateFlow(
         prefs.getBoolean(NOTIFICATIONS_ENABLED_KEY, true) // default to true
@@ -48,15 +44,6 @@ class SettingsViewModel @Inject constructor(
         val newValue = !_notificationsEnabled.value
         _notificationsEnabled.value = newValue
         prefs.edit().putBoolean(NOTIFICATIONS_ENABLED_KEY, newValue).apply()
-    }
-
-    fun onLogout(
-        onSuccess: () -> Unit
-    ) {
-        viewModelScope.launch {
-            auth.signOut()
-            onSuccess()
-        }
     }
 
     fun onPasswordChange(

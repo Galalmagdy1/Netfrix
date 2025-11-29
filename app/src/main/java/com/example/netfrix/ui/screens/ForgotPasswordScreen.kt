@@ -1,8 +1,9 @@
-package com.example.netfrix.ui.ui.screens
+package com.example.netfrix.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -83,7 +84,7 @@ fun ForgotPasswordScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(30.dp),
+                shape = RoundedCornerShape(30.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3))
             ) {
                 Text(text = "Send Reset Link", color = Color.White, fontSize = 16.sp)

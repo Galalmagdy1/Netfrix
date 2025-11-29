@@ -141,7 +141,8 @@ class MoviesViewModel @Inject constructor(
             _isLoading.value = true
             _errorMessage.value = null
             try {
-                val page = if (isRefresh) Random.nextInt(1, 21) else 1
+                val page = Random.nextInt(1, 501)
+
                 val response = repository.getMovies(page)
                 _apiMovies.value = response.results
             } catch (e: Exception) {
@@ -158,6 +159,7 @@ class MoviesViewModel @Inject constructor(
             }
         }
     }
+
 
     fun getMovieDetails(id: Int) {
         viewModelScope.launch {

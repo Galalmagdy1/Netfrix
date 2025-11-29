@@ -23,7 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.netfrix.data.MovieRepository
 import com.example.netfrix.navigation.NewGraph
 import com.example.netfrix.NotificationHelper
-import com.example.netfrix.ui.ui.screens.settings.SettingsViewModel
+import com.example.netfrix.viewmodel.SettingsViewModel
 import com.example.netfrix.viewmodel.MoviesViewModel
 import com.google.firebase.FirebaseApp
 import dagger.hilt.android.AndroidEntryPoint

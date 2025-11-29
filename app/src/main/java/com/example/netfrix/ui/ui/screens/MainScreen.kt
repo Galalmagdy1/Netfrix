@@ -33,7 +33,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.netfrix.ui.screens.SettingsScreen
-import com.example.netfrix.ui.ui.screens.settings.SettingsViewModel
+import com.example.netfrix.viewmodel.SettingsViewModel
 
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
     object Home : Screen("home", "Home", Icons.Default.Home)

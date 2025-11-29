@@ -14,7 +14,7 @@ import com.example.netfrix.ui.ui.screens.SplashScreen
 import com.example.netfrix.ui.ui.screens.details.MovieDetailScreen
 import com.example.netfrix.ui.screens.SettingsScreen
 import com.example.netfrix.ui.ui.screens.Screen
-import com.example.netfrix.ui.ui.screens.settings.SettingsViewModel
+import com.example.netfrix.viewmodel.SettingsViewModel
 
 @Composable
 fun NewGraph(

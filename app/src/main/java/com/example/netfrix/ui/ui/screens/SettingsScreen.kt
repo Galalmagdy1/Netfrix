@@ -24,7 +24,7 @@ import androidx.navigation.NavController
 import com.example.netfrix.R
 import com.example.netfrix.NotificationHelper
 import com.example.netfrix.ui.ui.screens.Screen
-import com.example.netfrix.ui.ui.screens.settings.SettingsViewModel
+import com.example.netfrix.viewmodel.SettingsViewModel
 
 @Composable
 fun SettingsScreen(

@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.netfrix.viewmodel.AuthViewModel
+import com.example.netfrix.ui.theme.*
 
 @Composable
 fun SplashScreen(
@@ -18,8 +19,6 @@ fun SplashScreen(
     onNavigateToLogin: () -> Unit,
     viewModel: AuthViewModel = viewModel()
 ) {
-    val DarkBlue = Color(0xFF0D0C1D)
-    val PurpleBlue = Color(0xFFB74F7B)
 
     LaunchedEffect(key1 = true) {
         if (viewModel.getCurrentVerifiedUser()) {
@@ -34,7 +33,7 @@ fun SplashScreen(
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(PurpleBlue, DarkBlue)
+                    colors = listOf(purpleBlue, darkBlue)
                 )
             ),
         contentAlignment = Alignment.Center

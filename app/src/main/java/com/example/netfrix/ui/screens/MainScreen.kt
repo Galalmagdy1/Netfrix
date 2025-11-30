@@ -31,6 +31,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.netfrix.ui.theme.*
 import com.example.netfrix.viewmodel.SettingsViewModel
 
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
@@ -55,8 +56,6 @@ fun MainScreen(
     onFavoritesHandled: () -> Unit
 ) {
     val navController = rememberNavController()
-    val DarkBlue = Color(0xFF0D0C1D)
-    val PurpleBlue = Color(0xFFB74F7B)
 
     LaunchedEffect(openFavorites) {
         if (openFavorites) {
@@ -76,7 +75,7 @@ fun MainScreen(
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(PurpleBlue, DarkBlue)
+                    colors = listOf(purpleBlue, darkBlue)
                 )
             )
     ) {

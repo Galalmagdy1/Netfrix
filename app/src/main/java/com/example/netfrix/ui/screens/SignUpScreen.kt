@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -25,6 +26,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.netfrix.R
+import com.example.netfrix.ui.theme.*
 import com.example.netfrix.viewmodel.AuthState
 import com.example.netfrix.viewmodel.AuthViewModel
 
@@ -33,15 +36,11 @@ fun SignUpScreen(
     onNavigateToLogin: () -> Unit,
     onNavigateToLoginAfterSuccess: () -> Unit
 ) {
-    val DarkBlue = Color(0xFF0D0C1D)
-    val PurpleBlue = Color(0xFFB74F7B)
 
-    // ViewModel + State
     val viewModel: AuthViewModel = viewModel()
     val authState by viewModel.authState.collectAsState()
     val context = LocalContext.current
 
-    // Variables
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -70,7 +69,7 @@ fun SignUpScreen(
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(PurpleBlue, DarkBlue)
+                    colors = listOf(purpleBlue, darkBlue)
                 )
             )
             .padding(24.dp)
@@ -84,7 +83,7 @@ fun SignUpScreen(
         ) {
 
             Text(
-                text = "Create Account ✨",
+                text = stringResource(R.string.create_account),
                 color = Color.White,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
@@ -94,7 +93,7 @@ fun SignUpScreen(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email", color = Color.White.copy(alpha = 0.8f)) },
+                label = { Text(text = stringResource(R.string.email), color = Color.White.copy(alpha = 0.8f)) },
                 textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
                 shape = RoundedCornerShape(30.dp),
                 colors = TextFieldDefaults.colors(
@@ -116,7 +115,7 @@ fun SignUpScreen(
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password", color = Color.White.copy(alpha = 0.8f)) },
+                label = { Text(text = stringResource(R.string.password), color = Color.White.copy(alpha = 0.8f)) },
                 textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
                 shape = RoundedCornerShape(30.dp),
                 colors = TextFieldDefaults.colors(
@@ -133,7 +132,7 @@ fun SignUpScreen(
                     IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                         Icon(
                             imageVector = if (isPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = "Toggle Password",
+                            contentDescription = stringResource(R.string.toggle_password),
                             tint = Color.White
                         )
                     }
@@ -148,7 +147,7 @@ fun SignUpScreen(
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = { Text("Confirm Password", color = Color.White.copy(alpha = 0.8f)) },
+                label = { Text(text = stringResource(R.string.confirm_password), color = Color.White.copy(alpha = 0.8f)) },
                 textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
                 shape = RoundedCornerShape(30.dp),
                 colors = TextFieldDefaults.colors(
@@ -165,7 +164,7 @@ fun SignUpScreen(
                     IconButton(onClick = { isConfirmPasswordVisible = !isConfirmPasswordVisible }) {
                         Icon(
                             imageVector = if (isConfirmPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = "Toggle Confirm Password",
+                            contentDescription = stringResource(R.string.toggle_confirm_password),
                             tint = Color.White
                         )
                     }
@@ -196,7 +195,7 @@ fun SignUpScreen(
                         modifier = Modifier.size(24.dp)
                     )
                 } else {
-                    Text("Sign Up", color = Color.White, fontSize = 18.sp)
+                    Text(text = stringResource(R.string.sign_up), color = Color.White, fontSize = 18.sp)
                 }
             }
 
@@ -207,11 +206,11 @@ fun SignUpScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Already have an account? ",
+                    text = stringResource(R.string.already_have_an_account),
                     color = Color.White.copy(alpha = 0.8f)
                 )
                 Text(
-                    text = "Login",
+                    text = stringResource(R.string.login),
                     color = Color(0xFF2196F3),
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.clickable {

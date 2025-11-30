@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,13 +38,12 @@ fun SettingsScreen(
             .padding(16.dp)
     ) {
         Text(
-            text = "Settings",
+            text = stringResource(R.string.settings),
             style = MaterialTheme.typography.headlineMedium,
             color = Color.White,
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
-        // Display user email
         userEmail?.let {
             Text(
                 text = it,
@@ -53,22 +53,24 @@ fun SettingsScreen(
             )
         }
 
-
-        // Change Password
         Row (
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
                 .clickable {
                     settingsViewModel.onPasswordChange {
-                        Toast.makeText(context, "Password reset email sent", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.password_reset_email_sent),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Change Password",
+                text = stringResource(R.string.change_password),
                 fontSize = 18.sp,
                 color = Color.White,
                 modifier = Modifier
@@ -76,7 +78,7 @@ fun SettingsScreen(
             )
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = "Change Password Arrow",
+                contentDescription = stringResource(R.string.change_password_arrow),
                 tint = Color.White,
                 modifier = Modifier.size(30.dp)
             )
@@ -87,7 +89,6 @@ fun SettingsScreen(
             color = Color.White
         )
 
-        // Notifications toggle
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -95,17 +96,16 @@ fun SettingsScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Notifications", fontSize = 18.sp , color = Color.White)
+            Text(text = stringResource(R.string.notifications), fontSize = 18.sp , color = Color.White)
             Switch(
                 checked = notificationsEnabled,
                 onCheckedChange = { newValue ->
                     settingsViewModel.toggleNotifications()
-                    // Optionally send a test notification when enabled
                     if (newValue) {
                         NotificationHelper.sendNotification(
                             context = context,
-                            title = "Notifications Enabled",
-                            message = "You'll receive notifications from Netfrix!",
+                            title = context.getString(R.string.notifications_enabled),
+                            message = context.getString(R.string.you_ll_receive),
                             imageRes = R.mipmap.ic_launcher
                         )
                     }
@@ -119,7 +119,6 @@ fun SettingsScreen(
             color = Color.White
         )
 
-        // Logout
         Button(
             onClick = {
                 settingsViewModel.logout()
@@ -134,7 +133,7 @@ fun SettingsScreen(
                 .padding(top = 24.dp),
             shape = RoundedCornerShape(8.dp)
         ) {
-            Text(text = "Logout", fontSize = 18.sp)
+            Text(text = stringResource(R.string.logout), fontSize = 18.sp)
         }
     }
 }

@@ -26,10 +26,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.netfrix.R
 import com.example.netfrix.models.Movie
 
 @Composable
@@ -47,19 +49,18 @@ fun MovieItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(
-            modifier = Modifier.height(250.dp) // Set a fixed height for the card
+            modifier = Modifier.height(250.dp)
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data("https://image.tmdb.org/t/p/w500${movie.poster_path}")
                     .crossfade(true)
                     .build(),
-                contentDescription = "Movie Poster",
+                contentDescription = stringResource(R.string.movie_poster),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // Gradient overlay
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -75,7 +76,7 @@ fun MovieItem(
             )
 
             Text(
-                text = movie.title ?: "N/A",
+                text = movie.title ?: stringResource(R.string.n_a),
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.White,
                 textAlign = TextAlign.Center,
@@ -96,7 +97,7 @@ fun MovieItem(
             ) {
                 Icon(
                     imageVector = if (movie.isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                    contentDescription = "Favorite",
+                    contentDescription = stringResource(R.string.favorite),
                     tint = if (movie.isFavorite) Color.Red else Color.White,
                     modifier = Modifier.size(24.dp)
                 )

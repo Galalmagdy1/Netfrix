@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -18,6 +19,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.netfrix.R
+import com.example.netfrix.ui.theme.darkBlue
+import com.example.netfrix.ui.theme.purpleBlue
 import com.example.netfrix.viewmodel.AuthViewModel
 import com.example.netfrix.viewmodel.AuthState
 
@@ -26,9 +30,6 @@ fun ForgotPasswordScreen(
     onNavigateToLogin: () -> Unit,
     viewModel: AuthViewModel = viewModel()
 ) {
-    val darkBlue = Color(0xFF0D0C1D)
-    val purpleBlue = Color(0xFFB74F7B)
-
     var email by remember { mutableStateOf("") }
     val authState by viewModel.authState.collectAsState()
 
@@ -50,7 +51,7 @@ fun ForgotPasswordScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Forgot Password",
+                text = stringResource(R.string.forgot_password),
                 color = Color.White,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
@@ -60,7 +61,7 @@ fun ForgotPasswordScreen(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email", color = Color.White.copy(alpha = 0.8f)) },
+                label = { Text(text = stringResource(R.string.email), color = Color.White.copy(alpha = 0.8f)) },
                 textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -87,16 +88,15 @@ fun ForgotPasswordScreen(
                 shape = RoundedCornerShape(30.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3))
             ) {
-                Text(text = "Send Reset Link", color = Color.White, fontSize = 16.sp)
+                Text(text = stringResource(R.string.send_reset_link), color = Color.White, fontSize = 16.sp)
             }
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // حالة التحميل أو النتيجة
             when (val state = authState) {
                 is AuthState.Loading -> {
                     Text(
-                        text = "Sending reset link...",
+                        text = stringResource(R.string.sending_reset_link),
                         color = Color.White.copy(alpha = 0.8f),
                         fontSize = 14.sp
                     )
@@ -125,12 +125,12 @@ fun ForgotPasswordScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Remembered? ",
+                    text = stringResource(R.string.remembered),
                     color = Color.White.copy(alpha = 0.8f),
                     fontSize = 14.sp
                 )
                 Text(
-                    text = "Login",
+                    text = stringResource(R.string.login),
                     color = Color(0xFF2196F3),
                     fontSize = 14.sp,
                     textDecoration = TextDecoration.Underline,

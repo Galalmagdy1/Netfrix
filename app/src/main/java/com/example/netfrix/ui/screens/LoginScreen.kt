@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -25,17 +26,16 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.netfrix.R
 import com.example.netfrix.viewmodel.AuthViewModel
 import com.example.netfrix.viewmodel.AuthState
-
+import com.example.netfrix.ui.theme.*
 @Composable
 fun LoginScreen(
     onNavigateToSignUp: () -> Unit,
     onNavigateToForgotPassword: () -> Unit,
     onNavigateToHome: () -> Unit
 ) {
-    val DarkBlue = Color(0xFF0D0C1D)
-    val PurpleBlue = Color(0xFFB74F7B)
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -67,7 +67,7 @@ fun LoginScreen(
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(PurpleBlue, DarkBlue)
+                    colors = listOf(purpleBlue, darkBlue)
                 )
             )
             .padding(24.dp)
@@ -80,7 +80,7 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Welcome Back 👋",
+                text = stringResource(R.string.welcome_back),
                 color = Color.White,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
@@ -90,7 +90,7 @@ fun LoginScreen(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email", color = Color.White.copy(alpha = 0.8f)) },
+                label = { Text(text = stringResource(R.string.email), color = Color.White.copy(alpha = 0.8f)) },
                 textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
                 shape = RoundedCornerShape(30.dp),
                 colors = TextFieldDefaults.colors(
@@ -112,7 +112,7 @@ fun LoginScreen(
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password", color = Color.White.copy(alpha = 0.8f)) },
+                label = { Text(stringResource(R.string.password), color = Color.White.copy(alpha = 0.8f)) },
                 textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
                 shape = RoundedCornerShape(30.dp),
                 colors = TextFieldDefaults.colors(
@@ -129,7 +129,7 @@ fun LoginScreen(
                     IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                         Icon(
                             imageVector = if (isPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = "Toggle Password",
+                            contentDescription = stringResource(R.string.toggle_password),
                             tint = Color.White
                         )
                     }
@@ -142,7 +142,7 @@ fun LoginScreen(
             )
 
             Text(
-                text = "Forgot Password?",
+                text = stringResource(R.string.forgot_password_question),
                 color = Color(0xFF2196F3),
                 fontSize = 14.sp,
                 textDecoration = TextDecoration.Underline,
@@ -171,7 +171,11 @@ fun LoginScreen(
                         modifier = Modifier.size(24.dp)
                     )
                 } else {
-                    Text("Login", color = Color.White, fontSize = 18.sp)
+                    Text(
+                        text = stringResource(R.string.login),
+                        color = Color.White,
+                        fontSize = 18.sp
+                    )
                 }
             }
 
@@ -182,11 +186,11 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Don’t have an account? ",
+                    text = stringResource(R.string.don_t_have_an_account),
                     color = Color.White.copy(alpha = 0.8f)
                 )
                 Text(
-                    text = "Sign Up",
+                    text = stringResource(R.string.sign_up),
                     color = Color(0xFF2196F3),
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.clickable {

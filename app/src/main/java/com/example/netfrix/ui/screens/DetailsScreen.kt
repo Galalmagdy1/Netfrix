@@ -46,6 +46,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -54,8 +55,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.netfrix.R
 import com.example.netfrix.models.Movie
 import com.example.netfrix.viewmodel.MoviesViewModel
+import com.example.netfrix.ui.theme.*
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,7 +75,6 @@ fun DetailScreen(
     val movieDetails by viewModel.movieDetails.collectAsState()
     val favorites by viewModel.favoriteMovies.collectAsState(initial = emptyList())
     val isFavorite = favorites.any { it.id == movieId }
-    val DarkBlue = Color(0xFF0D0C1D)
 
     Scaffold(
         topBar = {
@@ -81,7 +84,7 @@ fun DetailScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = Color.White
                         )
                     }
@@ -102,7 +105,7 @@ fun DetailScreen(
                         }) {
                             Icon(
                                 imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                                contentDescription = "Favorite",
+                                contentDescription = stringResource(R.string.favorite),
                                 tint = if (isFavorite) Color.Red else Color.White
                             )
                         }
@@ -111,7 +114,7 @@ fun DetailScreen(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
             )
         },
-        containerColor = DarkBlue
+        containerColor = darkBlue
     ) { paddingValues ->
         Box(
             modifier = Modifier.fillMaxSize()
@@ -137,7 +140,7 @@ fun DetailScreen(
                             brush = Brush.verticalGradient(
                                 colorStops = arrayOf(
                                     0.4f to Color.Transparent,
-                                    0.65f to DarkBlue
+                                    0.65f to darkBlue
                                 )
                             )
                         )
@@ -160,7 +163,7 @@ fun DetailScreen(
                         ) {
                             AsyncImage(
                                 model = "https://image.tmdb.org/t/p/w500${movieDetails?.posterPath ?: ""}",
-                                contentDescription = "Movie Poster",
+                                contentDescription = stringResource(R.string.movie_poster),
                                 contentScale = ContentScale.Crop
                             )
                         }
@@ -190,7 +193,7 @@ fun DetailScreen(
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(Icons.Default.Star, contentDescription = "Rating", tint = Color.Yellow)
+                                Icon(Icons.Default.Star, contentDescription = stringResource(R.string.rating), tint = Color.Yellow)
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(text = String.format("%.1f", movieDetails?.voteAverage), color = Color.White, fontSize = 16.sp)
                             }
@@ -245,7 +248,7 @@ fun DetailScreen(
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Text(
-                                    text = "Summary",
+                                    text = stringResource(R.string.summary),
                                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                                     color = Color.White
                                 )
@@ -272,11 +275,11 @@ fun DetailScreen(
                                     .padding(horizontal = 16.dp),
                                 horizontalArrangement = Arrangement.SpaceAround
                             ) {
-                                InfoChip("Status", details.status)
-                                InfoChip("Language", details.originalLanguage.uppercase())
-                                InfoChip("Adult", if (details.adult) "Yes" else "No")
+                                InfoChip(stringResource(R.string.status), details.status)
+                                InfoChip(stringResource(R.string.language), details.originalLanguage.uppercase())
+                                InfoChip(stringResource(R.string.adult), if (details.adult) stringResource(R.string.yes) else stringResource(R.string.no))
                                 details.runtime?.let {
-                                    InfoChip("Runtime", "${it} min")
+                                    InfoChip(stringResource(R.string.runtime), "${it} min")
                                 }
                             }
                         }
@@ -290,7 +293,7 @@ fun DetailScreen(
                         movieDetails?.productionCompanies?.takeIf { it.isNotEmpty() }?.let { companies ->
                             Column(modifier = Modifier.fillMaxWidth()) {
                                 Text(
-                                    text = "Production Companies",
+                                    text = stringResource(R.string.production_companies),
                                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                                     color = Color.White,
                                     modifier = Modifier.padding(horizontal = 16.dp)

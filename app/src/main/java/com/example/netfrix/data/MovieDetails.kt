@@ -107,20 +107,20 @@ data class MovieResult(
     companion object {
         fun fromMovie(movie: Movie): MovieResult {
             return MovieResult(
-                adult = false, // Assuming default value
+                adult = false,
                 backdropPath = movie.backdrop_path,
-                genreIds = emptyList(), // Assuming no genre IDs available from Movie
+                genreIds = emptyList(),
                 id = movie.id,
-                originalLanguage = "", // Assuming default value
-                originalTitle = "", // Assuming default value
+                originalLanguage = "",
+                originalTitle = "",
                 overview = movie.overview ?: "",
-                popularity = 0.0, // Assuming default value
+                popularity = 0.0,
                 posterPath = movie.poster_path,
                 releaseDate = movie.release_date ?: "",
                 title = movie.title ?: "",
-                video = false, // Assuming default value
+                video = false,
                 voteAverage = movie.vote_average ?: 0.0,
-                voteCount = 0 // Assuming default value
+                voteCount = 0
             )
         }
     }

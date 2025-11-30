@@ -43,11 +43,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.netfrix.R
 import com.example.netfrix.models.Movie
 import com.example.netfrix.viewmodel.MoviesViewModel
 
@@ -62,13 +64,13 @@ fun FavoritesScreen(navController: NavController, viewModel: MoviesViewModel = h
         topBar = {
             TopAppBar(
                 windowInsets = WindowInsets(top = 0.dp),
-                title = { Text("Favorites", color = Color.White) },
+                title = { Text(stringResource(R.string.favorites), color = Color.White) },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
                 actions = {
                     IconButton(onClick = { showMenu = !showMenu }) {
                         Icon(
                             Icons.Default.MoreVert,
-                            contentDescription = "More",
+                            contentDescription = stringResource(R.string.more),
                             tint = Color.White
                         )
                     }
@@ -77,7 +79,7 @@ fun FavoritesScreen(navController: NavController, viewModel: MoviesViewModel = h
                         onDismissRequest = { showMenu = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Logout") },
+                            text = { Text(stringResource(R.string.logout)) },
                             onClick = {
                                 viewModel.logout()
                                 navController.navigate("login") {
@@ -98,7 +100,7 @@ fun FavoritesScreen(navController: NavController, viewModel: MoviesViewModel = h
                         .padding(16.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "You haven't added any favorites yet.", color = Color.White)
+                    Text(text = stringResource(R.string.no_favourite), color = Color.White)
                 }
             } else {
                 LazyColumn {
@@ -142,7 +144,7 @@ fun FavoriteMovieItem(
                     .data("https://image.tmdb.org/t/p/w200${movie.poster_path}")
                     .crossfade(true)
                     .build(),
-                contentDescription = "Movie Poster",
+                contentDescription = stringResource(R.string.movie_poster),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(width = 80.dp, height = 100.dp)
@@ -151,7 +153,7 @@ fun FavoriteMovieItem(
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = movie.title ?: "N/A",
+                    text = movie.title ?: stringResource(R.string.n_a),
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.White
                 )
@@ -159,13 +161,13 @@ fun FavoriteMovieItem(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.Favorite,
-                        contentDescription = "Favorite",
+                        contentDescription = stringResource(R.string.favorite),
                         tint = Color.Red,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        "Favorite",
+                        stringResource(R.string.favorite),
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.White.copy(alpha = 0.8f)
                     )
@@ -175,7 +177,7 @@ fun FavoriteMovieItem(
             IconButton(onClick = onRemoveClick) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Remove from favorites",
+                    contentDescription = stringResource(R.string.remove_from_favorites),
                     tint = Color.White
                 )
             }

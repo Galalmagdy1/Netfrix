@@ -39,10 +39,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.netfrix.ui.screens.MovieItem
+import com.example.netfrix.R
 import com.example.netfrix.viewmodel.AuthViewModel
 import com.example.netfrix.viewmodel.MoviesViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -65,7 +66,7 @@ fun MoviesScreen(
     var showRefreshBanner by remember { mutableStateOf(false) }
 
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
-    val refreshMessage = "Refresh to discover new movies!"
+    val refreshMessage = stringResource(R.string.refresh_message)
 
     LaunchedEffect(Unit) {
         showRefreshBanner = true
@@ -78,21 +79,21 @@ fun MoviesScreen(
         topBar = {
             TopAppBar(
                 windowInsets = WindowInsets(top = 0.dp),
-                title = { Text("Movies", color = Color.White) },
+                title = { Text(text = stringResource(R.string.movies), color = Color.White) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
                     actionIconContentColor = Color.White
                 ),
                 actions = {
                     IconButton(onClick = { showMenu = !showMenu }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "More")
+                        Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more))
                     }
                     DropdownMenu(
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Logout") },
+                            text = { Text(stringResource(R.string.logout)) },
                             onClick = {
                                 authViewModel.signout()
                                 navController.navigate("login") {
@@ -119,7 +120,7 @@ fun MoviesScreen(
             ) {
                 if (errorMessage != null) {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = "Check Your Internet!", color = Color.White)
+                        Text(text = stringResource(R.string.check_your_internet), color = Color.White)
                     }
                 } else {
                     Column {

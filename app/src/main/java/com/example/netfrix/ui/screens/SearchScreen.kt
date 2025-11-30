@@ -26,10 +26,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.netfrix.ui.screens.MovieItem
+import com.example.netfrix.R
 import com.example.netfrix.viewmodel.MoviesViewModel
 
 @Composable
@@ -56,18 +57,17 @@ fun SearchScreen(
                 }
             } else if (errorMessage != null) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Check Your Internet!", color = Color.White)
+                    Text(text = stringResource(R.string.check_your_internet), color = Color.White)
                 }
             } else if (searchQuery.isNotBlank() && searchResults.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "No results found for \"$searchQuery\"", color = Color.White)
+                    Text(text = stringResource(R.string.no_results_found_for, searchQuery), color = Color.White)
                 }
             } else if (searchQuery.isBlank()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Search for movies and TV shows", color = Color.White)
+                    Text(text = stringResource(R.string.search_for_movies_and_tv_shows), color = Color.White)
                 }
             } else {
-                // Map search results to include favorite status
                 val moviesWithFavoriteStatus = searchResults.map { movie ->
                     movie.copy(isFavorite = favorites.any { favMovie -> favMovie.id == movie.id })
                 }
@@ -95,7 +95,7 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
-        placeholder = { Text("Search...", color = Color.White) },
+        placeholder = { Text(text = stringResource(R.string.search), color = Color.White) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
@@ -113,7 +113,7 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
         trailingIcon = {
             if (query.isNotEmpty()) {
                 IconButton(onClick = { onQueryChange("") }) {
-                    Icon(Icons.Default.Clear, contentDescription = "Clear search", tint = Color.White)
+                    Icon(Icons.Default.Clear, contentDescription = stringResource(R.string.clear_search), tint = Color.White)
                 }
             }
         }

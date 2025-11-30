@@ -45,7 +45,7 @@ class MoviesViewModel @Inject constructor(
         val prefs = context.getSharedPreferences("movie_prefs", Context.MODE_PRIVATE)
         prefs.edit()
             .putInt("last_fav_id", movie.id)
-            .putString("last_fav_title", movie.title)
+            .putString("last_fav_title", movie.title ?: "")
             .apply()
     }
 
@@ -160,14 +160,38 @@ class MoviesViewModel @Inject constructor(
         }
     }
 
-
     fun getMovieDetails(id: Int) {
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
-            try { _movieDetails.value = repository.getMovieDetails(id) }
-            catch (e: Exception) { _errorMessage.value = e.message }
-            finally { _isLoading.value = false }
+            try {
+                _movieDetails.value = repository.getMovieDetails(id)
+            } catch (e: Exception) {
+                _errorMessage.value = "You're offline. Showing cached details."
+                val localMovie = repository.getMovieById(id)
+                if (localMovie != null && localMovie.isFavorite) {
+                    val details = MovieDetails(
+                        id = localMovie.id,
+                        title = localMovie.title ?: "",
+                        overview = localMovie.overview ?: "",
+                        posterPath = localMovie.poster_path,
+                        backdropPath = localMovie.backdrop_path,
+                        releaseDate = localMovie.release_date ?: "",
+                        voteAverage = localMovie.vote_average ?: 0.0,
+                        adult = localMovie.adult,
+                        genres = localMovie.genres ?: emptyList(),
+                        originalLanguage = localMovie.original_language,
+                        productionCompanies = localMovie.production_companies ?: emptyList(),
+                        runtime = localMovie.runtime,
+                        status = localMovie.status,
+                    )
+                    _movieDetails.value = details
+                } else {
+                    _errorMessage.value = "No internet connection and movie not found in offline favorites."
+                }
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
@@ -176,14 +200,32 @@ class MoviesViewModel @Inject constructor(
             val localMovie = repository.getMovieById(movie.id)
             val isNowFavorite = localMovie?.let { !it.isFavorite } ?: true
 
-            if (localMovie != null) repository.updateMovie(localMovie.copy(isFavorite = isNowFavorite))
-            else repository.insertMovie(movie.copy(isFavorite = true))
-
             if (isNowFavorite) {
-                setLastFavorite(movie)
-                // Set flag to indicate a movie was recently added to favorites
+                // Fetch full details and save to local database
+                val movieDetails = repository.getMovieDetails(movie.id)
+                val fullMovie = Movie(
+                    id = movieDetails.id,
+                    title = movieDetails.title,
+                    overview = movieDetails.overview ?: "",
+                    poster_path = movieDetails.posterPath,
+                    backdrop_path = movieDetails.backdropPath,
+                    release_date = movieDetails.releaseDate,
+                    vote_average = movieDetails.voteAverage,
+                    isFavorite = true,
+                    genres = movieDetails.genres,
+                    runtime = movieDetails.runtime,
+                    status = movieDetails.status,
+                    original_language = movieDetails.originalLanguage,
+                    adult = movieDetails.adult,
+                    production_companies = movieDetails.productionCompanies
+                )
+                repository.insertMovie(fullMovie)
+                setLastFavorite(fullMovie)
                 val prefs = context.getSharedPreferences("netfrix_prefs", Context.MODE_PRIVATE)
                 prefs.edit().putBoolean("has_recent_favorite", true).apply()
+            } else {
+                // Just update the favorite flag to false
+                localMovie?.let { repository.updateMovie(it.copy(isFavorite = false)) }
             }
         }
     }

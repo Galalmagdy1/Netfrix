@@ -1,4 +1,4 @@
-package com.example.netfrix.ui.screens.details
+package com.example.netfrix.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -29,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -39,26 +42,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.netfrix.data.MovieDetails
-import com.example.netfrix.data.ProductionCompany
 import com.example.netfrix.models.Movie
 import com.example.netfrix.viewmodel.MoviesViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieDetailScreen(
+fun DetailScreen(
     navController: NavController,
     movieId: Int,
     viewModel: MoviesViewModel = hiltViewModel()
@@ -75,10 +76,14 @@ fun MovieDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { /* No title for a cleaner look */ },
+                title = {},
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.White
+                        )
                     }
                 },
                 actions = {
@@ -106,7 +111,7 @@ fun MovieDetailScreen(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
             )
         },
-        containerColor = DarkBlue // Set base background to DarkBlue
+        containerColor = DarkBlue
     ) { paddingValues ->
         Box(
             modifier = Modifier.fillMaxSize()
@@ -116,7 +121,6 @@ fun MovieDetailScreen(
                     CircularProgressIndicator()
                 }
             } else {
-                // Background Image (Blurred) - Draws behind everything
                 AsyncImage(
                     model = "https://image.tmdb.org/t/p/w500${movieDetails?.backdropPath ?: ""}",
                     contentDescription = null,
@@ -126,15 +130,14 @@ fun MovieDetailScreen(
                         .blur(radius = 16.dp)
                 )
 
-                // Fade-to-DarkBlue gradient overlay
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(
                             brush = Brush.verticalGradient(
                                 colorStops = arrayOf(
-                                    0.4f to Color.Transparent, // Top part is clear
-                                    0.65f to DarkBlue      // Fade to DarkBlue, then solid DarkBlue below
+                                    0.4f to Color.Transparent,
+                                    0.65f to DarkBlue
                                 )
                             )
                         )
@@ -142,7 +145,7 @@ fun MovieDetailScreen(
 
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = paddingValues, // Apply padding for content to start below TopAppBar
+                    contentPadding = paddingValues,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     item {
@@ -150,7 +153,6 @@ fun MovieDetailScreen(
                     }
 
                     item {
-                        // Centered Movie Poster
                         Card(
                             shape = RoundedCornerShape(16.dp),
                             elevation = CardDefaults.cardElevation(8.dp),
@@ -169,7 +171,6 @@ fun MovieDetailScreen(
                     }
 
                     item {
-                        // Movie Title
                         Text(
                             text = movieDetails?.title ?: "",
                             style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
@@ -184,7 +185,6 @@ fun MovieDetailScreen(
                     }
 
                     item {
-                        // Metadata Row
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -202,18 +202,45 @@ fun MovieDetailScreen(
                     }
 
                     item {
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
 
                     item {
-                        // Summary Section inside a Card
+                        movieDetails?.genres?.let { genres ->
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                contentPadding = PaddingValues(horizontal = 16.dp)
+                            ) {
+                                items(genres) { genre ->
+                                    Surface(
+                                        shape = CircleShape,
+                                        color = Color.White.copy(alpha = 0.1f)
+                                    ) {
+                                        Text(
+                                            text = genre.name,
+                                            color = Color.White,
+                                            fontSize = 12.sp,
+                                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    item {
+                        Spacer(modifier = Modifier.height(24.dp))
+                    }
+
+
+                    item {
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = Color.Transparent // Make card transparent to show gradient background
+                                containerColor = Color.Transparent
                             )
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
@@ -237,7 +264,28 @@ fun MovieDetailScreen(
                         Spacer(modifier = Modifier.height(24.dp))
                     }
 
-                    // Production Companies Section
+                    item {
+                         movieDetails?.let { details ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                                horizontalArrangement = Arrangement.SpaceAround
+                            ) {
+                                InfoChip("Status", details.status)
+                                InfoChip("Language", details.originalLanguage.uppercase())
+                                InfoChip("Adult", if (details.adult) "Yes" else "No")
+                                details.runtime?.let {
+                                    InfoChip("Runtime", "${it} min")
+                                }
+                            }
+                        }
+                    }
+
+                    item {
+                        Spacer(modifier = Modifier.height(24.dp))
+                    }
+
                     item {
                         movieDetails?.productionCompanies?.takeIf { it.isNotEmpty() }?.let { companies ->
                             Column(modifier = Modifier.fillMaxWidth()) {
@@ -310,5 +358,23 @@ fun MovieDetailScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun InfoChip(label: String, value: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = label,
+            color = Color.LightGray,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = value,
+            color = Color.White,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.SemiBold
+        )
     }
 }

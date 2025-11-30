@@ -11,7 +11,7 @@ import com.example.netfrix.ui.screens.LoginScreen
 import com.example.netfrix.ui.screens.MainScreen
 import com.example.netfrix.ui.screens.SignUpScreen
 import com.example.netfrix.ui.screens.SplashScreen
-import com.example.netfrix.ui.screens.details.MovieDetailScreen
+import com.example.netfrix.ui.screens.DetailScreen
 import com.example.netfrix.ui.screens.SettingsScreen
 import com.example.netfrix.ui.screens.Screen
 import com.example.netfrix.viewmodel.SettingsViewModel
@@ -101,7 +101,7 @@ fun NewGraph(
         ) { backStackEntry ->
             val movieId = backStackEntry.arguments?.getInt("movieId")
             if (movieId != null) {
-                MovieDetailScreen(
+                DetailScreen(
                     navController = navController,
                     movieId = movieId
                 )

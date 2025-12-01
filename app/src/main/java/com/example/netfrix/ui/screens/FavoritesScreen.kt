@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -32,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,10 +43,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.animation.core.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -59,12 +63,38 @@ fun FavoritesScreen(navController: NavController, viewModel: MoviesViewModel = h
     val favoriteMovies by viewModel.favoriteMovies.collectAsState()
     var showMenu by remember { mutableStateOf(false) }
 
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        isVisible = true
+    }
+
+    val topBarAlpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing),
+        label = "topBarAlpha"
+    )
+    val topBarOffsetY by animateFloatAsState(
+        targetValue = if (isVisible) 0f else -50f,
+        animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing),
+        label = "topBarOffsetY"
+    )
+
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
             TopAppBar(
                 windowInsets = WindowInsets(top = 0.dp),
-                title = { Text(stringResource(R.string.favorites), color = Color.White) },
+                title = { 
+                    Text(
+                        stringResource(R.string.favorites), 
+                        color = Color.White,
+                        modifier = Modifier.graphicsLayer {
+                            alpha = topBarAlpha
+                            translationY = topBarOffsetY
+                        }
+                    ) 
+                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
                 actions = {
                     IconButton(onClick = { showMenu = !showMenu }) {
@@ -94,17 +124,43 @@ fun FavoritesScreen(navController: NavController, viewModel: MoviesViewModel = h
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             if (favoriteMovies.isEmpty()) {
+                val emptyStateAlpha by animateFloatAsState(
+                    targetValue = if (isVisible) 1f else 0f,
+                    animationSpec = tween(durationMillis = 600, delayMillis = 300, easing = FastOutSlowInEasing),
+                    label = "emptyStateAlpha"
+                )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(16.dp)
+                        .graphicsLayer {
+                            alpha = emptyStateAlpha
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(text = stringResource(R.string.no_favourite), color = Color.White)
                 }
             } else {
                 LazyColumn {
-                    items(favoriteMovies) { movie ->
+                    itemsIndexed(favoriteMovies) { index, movie ->
+                        val itemAlpha by animateFloatAsState(
+                            targetValue = if (isVisible) 1f else 0f,
+                            animationSpec = tween(
+                                durationMillis = 500,
+                                delayMillis = 200 + index * 100,
+                                easing = FastOutSlowInEasing
+                            ),
+                            label = "itemAlpha"
+                        )
+                        val itemOffsetX by animateFloatAsState(
+                            targetValue = if (isVisible) 0f else -50f,
+                            animationSpec = tween(
+                                durationMillis = 500,
+                                delayMillis = 200 + index * 100,
+                                easing = FastOutSlowInEasing
+                            ),
+                            label = "itemOffsetX"
+                        )
                         FavoriteMovieItem(
                             movie = movie,
                             onItemClick = {
@@ -112,6 +168,10 @@ fun FavoritesScreen(navController: NavController, viewModel: MoviesViewModel = h
                             },
                             onRemoveClick = {
                                 viewModel.toggleFavorite(movie)
+                            },
+                            modifier = Modifier.graphicsLayer {
+                                alpha = itemAlpha
+                                translationX = itemOffsetX
                             }
                         )
                     }
@@ -125,10 +185,11 @@ fun FavoritesScreen(navController: NavController, viewModel: MoviesViewModel = h
 fun FavoriteMovieItem(
     movie: Movie,
     onItemClick: (Int) -> Unit,
-    onRemoveClick: () -> Unit
+    onRemoveClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .fillMaxWidth()
             .clickable { onItemClick(movie.id) },

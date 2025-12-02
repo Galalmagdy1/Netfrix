@@ -38,10 +38,11 @@ import com.example.netfrix.models.Movie
 fun MovieItem(
     movie: Movie,
     onFavoriteClick: (Movie) -> Unit = {},
-    onItemClick: (Int) -> Unit = {}
+    onItemClick: (Int) -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(4.dp)
             .fillMaxWidth()
             .clickable { onItemClick(movie.id) },

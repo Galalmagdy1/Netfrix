@@ -30,6 +30,9 @@ import com.example.netfrix.R
 import com.example.netfrix.viewmodel.AuthViewModel
 import com.example.netfrix.viewmodel.AuthState
 import com.example.netfrix.ui.theme.*
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
+import androidx.compose.ui.graphics.graphicsLayer
 @Composable
 fun LoginScreen(
     onNavigateToSignUp: () -> Unit,
@@ -45,6 +48,70 @@ fun LoginScreen(
     val authState by viewModel.authState.collectAsState()
     val context = LocalContext.current
 
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        isVisible = true
+    }
+
+    val titleAlpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing),
+        label = "titleAlpha"
+    )
+    val titleOffsetY by animateFloatAsState(
+        targetValue = if (isVisible) 0f else -30f,
+        animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing),
+        label = "titleOffsetY"
+    )
+
+    val emailFieldAlpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(durationMillis = 600, delayMillis = 200, easing = FastOutSlowInEasing),
+        label = "emailFieldAlpha"
+    )
+    val emailFieldOffsetY by animateFloatAsState(
+        targetValue = if (isVisible) 0f else -20f,
+        animationSpec = tween(durationMillis = 600, delayMillis = 200, easing = FastOutSlowInEasing),
+        label = "emailFieldOffsetY"
+    )
+
+    val passwordFieldAlpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(durationMillis = 600, delayMillis = 350, easing = FastOutSlowInEasing),
+        label = "passwordFieldAlpha"
+    )
+    val passwordFieldOffsetY by animateFloatAsState(
+        targetValue = if (isVisible) 0f else -20f,
+        animationSpec = tween(durationMillis = 600, delayMillis = 350, easing = FastOutSlowInEasing),
+        label = "passwordFieldOffsetY"
+    )
+
+    val forgotPasswordAlpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(durationMillis = 500, delayMillis = 500, easing = FastOutSlowInEasing),
+        label = "forgotPasswordAlpha"
+    )
+
+    val buttonAlpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(durationMillis = 600, delayMillis = 600, easing = FastOutSlowInEasing),
+        label = "buttonAlpha"
+    )
+    val buttonScale by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0.8f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "buttonScale"
+    )
+
+    val signUpRowAlpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(durationMillis = 500, delayMillis = 700, easing = FastOutSlowInEasing),
+        label = "signUpRowAlpha"
+    )
 
     LaunchedEffect(authState) {
         when (authState) {
@@ -84,7 +151,12 @@ fun LoginScreen(
                 color = Color.White,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 40.dp)
+                modifier = Modifier
+                    .padding(bottom = 40.dp)
+                    .graphicsLayer {
+                        alpha = titleAlpha
+                        translationY = titleOffsetY
+                    }
             )
 
             OutlinedTextField(
@@ -105,7 +177,11 @@ fun LoginScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                    .padding(vertical = 8.dp)
+                    .graphicsLayer {
+                        alpha = emailFieldAlpha
+                        translationY = emailFieldOffsetY
+                    },
                 enabled = authState != AuthState.Loading
             )
 
@@ -137,7 +213,11 @@ fun LoginScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                    .padding(vertical = 8.dp)
+                    .graphicsLayer {
+                        alpha = passwordFieldAlpha
+                        translationY = passwordFieldOffsetY
+                    },
                 enabled = authState != AuthState.Loading
             )
 
@@ -150,6 +230,9 @@ fun LoginScreen(
                     .align(Alignment.End)
                     .clickable { onNavigateToForgotPassword() }
                     .padding(top = 4.dp, end = 4.dp)
+                    .graphicsLayer {
+                        alpha = forgotPasswordAlpha
+                    }
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -162,7 +245,12 @@ fun LoginScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
+                    .height(50.dp)
+                    .graphicsLayer {
+                        alpha = buttonAlpha
+                        scaleX = buttonScale
+                        scaleY = buttonScale
+                    },
                 enabled = authState != AuthState.Loading
             ) {
                 if (authState is AuthState.Loading) {
@@ -183,7 +271,11 @@ fun LoginScreen(
 
             Row(
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer {
+                        alpha = signUpRowAlpha
+                    }
             ) {
                 Text(
                     text = stringResource(R.string.don_t_have_an_account),

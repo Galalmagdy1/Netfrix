@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
@@ -39,8 +40,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.animation.core.*
+import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.netfrix.R
@@ -68,18 +72,41 @@ fun MoviesScreen(
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
     val refreshMessage = stringResource(R.string.refresh_message)
 
+    var isVisible by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
+        isVisible = true
         showRefreshBanner = true
         delay(3000)
         showRefreshBanner = false
     }
+
+    val topBarAlpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing),
+        label = "topBarAlpha"
+    )
+    val topBarOffsetY by animateFloatAsState(
+        targetValue = if (isVisible) 0f else -50f,
+        animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing),
+        label = "topBarOffsetY"
+    )
 
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
             TopAppBar(
                 windowInsets = WindowInsets(top = 0.dp),
-                title = { Text(text = stringResource(R.string.movies), color = Color.White) },
+                title = { 
+                    Text(
+                        text = stringResource(R.string.movies), 
+                        color = Color.White,
+                        modifier = Modifier.graphicsLayer {
+                            alpha = topBarAlpha
+                            translationY = topBarOffsetY
+                        }
+                    ) 
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
                     actionIconContentColor = Color.White
@@ -119,7 +146,19 @@ fun MoviesScreen(
                 },
             ) {
                 if (errorMessage != null) {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    val errorAlpha by animateFloatAsState(
+                        targetValue = if (isVisible) 1f else 0f,
+                        animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing),
+                        label = "errorAlpha"
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .graphicsLayer {
+                                alpha = errorAlpha
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
                         Text(text = stringResource(R.string.check_your_internet), color = Color.White)
                     }
                 } else {
@@ -149,7 +188,24 @@ fun MoviesScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            items(movies) { movie ->
+                            itemsIndexed(movies) { index, movie ->
+                                val itemAlpha by animateFloatAsState(
+                                    targetValue = if (isVisible) 1f else 0f,
+                                    animationSpec = tween(
+                                        durationMillis = 500,
+                                        delayMillis = 300 + (index % 4) * 100,
+                                        easing = FastOutSlowInEasing
+                                    ),
+                                    label = "itemAlpha"
+                                )
+                                val itemScale by animateFloatAsState(
+                                    targetValue = if (isVisible) 1f else 0.8f,
+                                    animationSpec = spring(
+                                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                                        stiffness = Spring.StiffnessLow
+                                    ),
+                                    label = "itemScale"
+                                )
                                 MovieItem(
                                     movie = movie,
                                     onFavoriteClick = {
@@ -158,7 +214,12 @@ fun MoviesScreen(
                                         }
                                         viewModel.toggleFavorite(movie)
                                     },
-                                    onItemClick = { navController.navigate("detailscreen/${movie.id}") }
+                                    onItemClick = { navController.navigate("detailscreen/${movie.id}") },
+                                    modifier = Modifier.graphicsLayer {
+                                        alpha = itemAlpha
+                                        scaleX = itemScale
+                                        scaleY = itemScale
+                                    }
                                 )
                             }
                         }

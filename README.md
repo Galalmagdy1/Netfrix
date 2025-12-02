@@ -69,11 +69,13 @@ The app allows users to explore, search, and view comprehensive movie details wi
 * Designed and implemented the App Icon
 * Integrated Firebase Authentication
 * Organized project structure and team workflow
+* Implemented comprehensive Testing (Unit Tests & UI Tests)
 
 ### 🛠️ Ahmed Ashour
 * Implemented the application Notifications System
 * Fixed UI bugs and handled general issue solving
 * Assisted in improving UI responsiveness
+* Implemented smooth internal app animations
 
 ### ⚙️ Faisal Mahmoud
 * Built the complete Settings Screen
